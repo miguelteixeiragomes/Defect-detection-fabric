@@ -5,7 +5,15 @@ from scipy.ndimage import imread
 from scipy.integrate import dblquad
 from scipy.signal import convolve2d
 import matplotlib.cm as cm
-from scipy.optimize import curve_fit
+from image_rotation import ROTATE
+
+def photo_angle(I):
+    Gx = I[2:  , 1:-1] - I[ :-2, 1:-1]
+    Gy = I[1:-1, 2:  ] - I[1:-1,  :-2]
+    O  = np.arctan2(Gy, Gx)
+    O *= 180./np.pi
+    O[np.where(O < 0)] += 180.
+    return 90. - np.average(O, weights = np.sqrt(Gx*Gx + Gy*Gy))
 
 def compr(I, n):
     a = np.zeros((I.shape[0]//n, I.shape[1]//n))
@@ -40,10 +48,11 @@ def secondDerivSqrd(I):
     #return Y
     #return X*X + Y*Y
 
-def test(lst_maxes, threshold = 5.):
+def bool_test(lst_maxes, threshold = 5.):
     lst_maxes.sort()
-    if lst_maxes[-1] > threshold*lst_maxes[-2]:
-        return True
+    if len(lst_maxes ) > 1:
+        if lst_maxes[-1] > threshold*lst_maxes[-2]:
+            return True
     return False
 
 def svd_decomp(I, n):
@@ -51,7 +60,7 @@ def svd_decomp(I, n):
     s[n:] = 0.
     return np.dot(u, np.dot(np.diag(s), v))
 
-def fullTest(I, compression, firstGauss, secondGauss, threshold, represent = True):
+def defect_detection(I, compression, firstGauss, secondGauss, threshold, represent = True, rotate = True):
     #recebe img em escala de cinzentos
     img = compr(I, compression)
     if represent:
@@ -59,22 +68,33 @@ def fullTest(I, compression, firstGauss, secondGauss, threshold, represent = Tru
         pl.imshow(img, cmap = 'Greys_r')
         pl.axis('off')
     img = convolve2d(img, generateGaussianKernel2D(firstGauss), mode = 'valid')
+    
+    if rotate:
+        img = ROTATE(img, photo_angle(img))[1:-1, 1:-1]
+    
     if represent:
+        pl.figure(1)
         pl.subplot(222)
         pl.imshow(img, cmap = 'Greys_r')
         pl.axis('off')
+        
     img = secondDerivSqrd(img)
+    
     if represent:
         pl.subplot(223)
         pl.imshow(img, cmap = 'Greys_r')
         pl.axis('off')
+        
     img = np.average(img, axis = 0)
+    img -= np.average(img)
+    
     if represent:
         pl.subplot(224)
         pl.plot(img, ':')
-        #pl.axis('off')
+        
     img = np.convolve(img, generateGaussianKernel1D(secondGauss), mode = 'valid')
+    
     if represent:
         pl.plot([0.]*(secondGauss//2) + list(img))
-        #pl.axis('off')
-    return test(maxes(img), threshold)
+    
+    return bool_test(maxes(img), threshold)
