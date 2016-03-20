@@ -71,7 +71,8 @@ def defect_detection(I, compression, firstGauss, secondGauss, threshold, represe
     img = convolve2d(img, generateGaussianKernel2D(firstGauss), mode = 'valid')
     
     if rotate:
-        img = ROTATE(img, np.pi*photo_angle(img)/180.)[1:-1, 1:-1]
+        print 'rotating'
+        img = ROTATE(img, photo_angle(img))[1:-1, 1:-1]
     
     if represent:
         pl.figure(1)
@@ -87,15 +88,15 @@ def defect_detection(I, compression, firstGauss, secondGauss, threshold, represe
         pl.axis('off')
         
     img = np.average(img, axis = 0)
-    #img -= np.average(img)
+    img -= np.average(img)
     
     if represent:
         pl.subplot(224)
-        pl.plot(img, ':')
+        #pl.plot(img, ':')
         
-    #img = np.convolve(img, generateGaussianKernel1D(secondGauss), mode = 'valid')
+    img = np.convolve(img, generateGaussianKernel1D(secondGauss), mode = 'valid')
     
-    img = irfft(rfft(img)[20:-20])
+    #img = irfft(rfft(img)[50:-50])
     if represent:
         pl.plot([0.]*(secondGauss//2) + list(img))
     
