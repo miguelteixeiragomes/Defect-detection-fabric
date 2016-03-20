@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=0"/>
+    <title>App Tester</title>
+    <!-- scripts -->
+    <link rel="stylesheet" href="script/css/imageOps.css">
+    <script src="APP/library/require.js" data-main="APP/config/config"></script>
+    <!-- end of script -->
+</head>
+<body>
+<div class="toolbar">
+    <input type="file" id="Load" name="files[]"/>
+</div>
+<div class="formatToolbar">
+    <button id="Apply FFT" disabled onclick="TopWriterAPI.startEditionMode();">✎</button>
+    <button id="Apply Rotation" disabled><b>R</b></button>
+    <button id="italic" disabled><i>I</i></button>
+    <button id="underline" disabled><u>U</u></button>
+    <button id="strike" disabled><s>S</s></button>
+    <button id="shadow" disabled style="text-shadow: 1px 1px #000000;">S</button>
+    <button id="zoomTextIn" disabled onclick="TopWriterAPI.zoomText(0)"> &#128269;+ </button>
+    <button id="zoomTextOut" disabled onclick="TopWriterAPI.zoomText(1)"> &#128269;- </button>
+    <button id="zoomTextReset" disabled onclick="TopWriterAPI.zoomTextReset()">∄&#128269;</button>
+    <button id="jc_left" disabled onclick="TopWriterAPI.alignParagraphLeft()">L&nbsp;&nbsp;</button>
+    <button id="jc_right" disabled onclick="TopWriterAPI.alignParagraphRight()">&nbsp;&nbsp;R</button>
+    <button id="jc_center" disabled onclick="TopWriterAPI.alignParagraphCenter()">&nbsp;C&nbsp;</button>
+    <button id="jc_justify" disabled onclick="TopWriterAPI.alignParagraphJustified()">J</button>
+    <button id="color_auto" style="color:black" disabled onclick="TopWriterAPI.setTextColor()">∄Color</button>
+    <button id="color_red" style="color:red" disabled onclick="TopWriterAPI.setTextColor('FF3300')">Color</button>
+    <button id="indent" disabled onclick="TopWriterAPI.indent()"> ⇥A </button>
+    <button id="outdent" disabled onclick="TopWriterAPI.outdent()"> ⇤A </button>
+    <button id="bullet_list" disabled onclick="TopWriterAPI.toggleList(0)">&bull;</button>
+    <button id="numbered_list" disabled onclick="TopWriterAPI.toggleList(1)"> 1. </button>
+    <button id="font_sz20" disabled onclick="TopWriterAPI.setFontSize(20)">F20</button>
+    <button id="font_sz12" disabled onclick="TopWriterAPI.setFontSize(12)">F12</button>
+    <button id="font_sz_up" disabled onclick="TopWriterAPI.fontSizeUp(1)"> a↟ </button>
+    <button id="font_sz_down" disabled onclick="TopWriterAPI.fontSizeDown(1)"> a↡ </button>
+    <button id="insert_footnote" disabled onclick="TopWriterAPI.insertFootnote()">a<sup>1</sup></button>
+    <button id="insertTable" disabled onclick="TopWriterAPI.insertTable(4,3)"> ☷ </button>
+</div>
+</body>
+</html>
