@@ -6,6 +6,7 @@ from scipy.integrate import dblquad
 from scipy.signal import convolve2d
 import matplotlib.cm as cm
 from image_rotation import ROTATE
+from numpy.fft import rfft, irfft
 
 def photo_angle(I):
     Gx = I[2:  , 1:-1] - I[ :-2, 1:-1]
@@ -70,7 +71,7 @@ def defect_detection(I, compression, firstGauss, secondGauss, threshold, represe
     img = convolve2d(img, generateGaussianKernel2D(firstGauss), mode = 'valid')
     
     if rotate:
-        img = ROTATE(img, photo_angle(img))[1:-1, 1:-1]
+        img = ROTATE(img, np.pi*photo_angle(img)/180.)[1:-1, 1:-1]
     
     if represent:
         pl.figure(1)
@@ -86,14 +87,15 @@ def defect_detection(I, compression, firstGauss, secondGauss, threshold, represe
         pl.axis('off')
         
     img = np.average(img, axis = 0)
-    img -= np.average(img)
+    #img -= np.average(img)
     
     if represent:
         pl.subplot(224)
         pl.plot(img, ':')
         
-    img = np.convolve(img, generateGaussianKernel1D(secondGauss), mode = 'valid')
+    #img = np.convolve(img, generateGaussianKernel1D(secondGauss), mode = 'valid')
     
+    img = irfft(rfft(img)[20:-20])
     if represent:
         pl.plot([0.]*(secondGauss//2) + list(img))
     
