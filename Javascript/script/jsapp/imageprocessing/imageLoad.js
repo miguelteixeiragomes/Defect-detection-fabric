@@ -2,7 +2,7 @@
  * Created by JoaoCosta on 20/03/16.
  */
 
-define(['base64'], function(Base64) {
+define(['base64', 'core/context'], function(Base64, Context) {
 
     function loadImageByBlob(blob)
     {
@@ -11,7 +11,7 @@ define(['base64'], function(Base64) {
 
     function init()
     {
-        Context.setImageProcessingController(this);
+        Context.setImageLoadController(this);
     }
 
     return{

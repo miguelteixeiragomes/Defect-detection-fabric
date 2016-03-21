@@ -8,7 +8,7 @@ define(['app/runtime'], function(runtime){
     {
         if(blob)
         {
-            imageLoadController = runtime.getManager().getContext().getImageLoadController();
+            var imageLoadController = runtime.getManager().getContext().getImageLoadController();
             imageLoadController.loadImageByBlob(blob);
             return true;
         }
@@ -19,7 +19,7 @@ define(['app/runtime'], function(runtime){
     {
         if(imgBase64)
         {
-            imageLoadController = runtime.getManager().getContext().getImageLoadController();
+            var imageLoadController = runtime.getManager().getContext().getImageLoadController();
             imageLoadController.loadImage(imgBase64);
             return true;
         }

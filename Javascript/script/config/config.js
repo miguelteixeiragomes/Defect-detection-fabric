@@ -3,7 +3,7 @@
  */
 
 require.config({
-    baseUrl: './APP',
+    baseUrl: './script',
     paths: {
         // JavaScript folders
         'fixed':        "library",

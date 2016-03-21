@@ -10,8 +10,6 @@ define(['core/manager'], function(Manager){
 
     function loadImage(evt){
 
-        console.log("estou no runtime");
-
         Manager.initProcessingControllers();
 
         var files = evt.target.files; // FileList object
@@ -27,6 +25,7 @@ define(['core/manager'], function(Manager){
         if (fileExtension === "jpeg" || fileExtension === "jpg"
             || fileExtension === "gif" || fileExtension === "png")
         {
+            debugger;
             var imageLoadController = Manager.getContext().getImageLoadController();
             imageLoadController.loadImageByBlob(files[0]);
         }
