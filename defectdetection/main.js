@@ -2,6 +2,8 @@
  * Created by JoaoCosta on 20/03/16.
  */
 
+//teste
+
 define(['app/runtime'], function(runtime){
 
     function loadImageByBlob(blob)
