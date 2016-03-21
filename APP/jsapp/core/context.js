@@ -1,5 +1,5 @@
 /**
- * Created by JoaoCosta on 20/03/16.
+ * Created by Joao Costa on 20/03/16.
  */
 
 define(function(){

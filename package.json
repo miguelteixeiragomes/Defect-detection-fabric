@@ -1,7 +1,7 @@
 {
   "name": "DefectDetection",
   "version": "0.1.0",
-  "description": "Image Defect Detection",
+  "description": "Javascript APP",
 
   "main": "server.js",
   "scripts": {
@@ -15,7 +15,6 @@
   },
 
   "author": "Joao Costa",
-  "license": "ISC",
   "homepage": "https://github.com/JoaoCosta94/TIGT-Proj",
 
   "dependencies": {

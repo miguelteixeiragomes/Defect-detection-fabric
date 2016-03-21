@@ -10,6 +10,8 @@ define(['core/manager'], function(Manager){
 
     function loadImage(evt){
 
+        console.log("estou no runtime");
+
         Manager.initProcessingControllers();
 
         var files = evt.target.files; // FileList object

@@ -5,13 +5,17 @@
     <meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=0"/>
     <title>App Tester</title>
     <!-- scripts -->
-    <link rel="stylesheet" href="defectdetection/css/imageOps.css">
-    <script src="defectdetection/library/require.js" data-main="defectdetection/config/config"></script>
-    <!-- end of script -->
+    <link rel="stylesheet" href="APP/css/imageOps.css">
+    <script src="APP/library/require.js" data-main="APP/config/config"></script>
+    <!-- end of APP -->
 </head>
 <body>
-<div class="toolbar">
-    <input type="file" id="Load" name="files[]"/>
-</div>
+    <div class="toolbar">
+        <input type="file" id="Load" name="files[]"/>
+    </div>
+    <div class="documentcontainer" id="documentcontainer"></div>
+    <div class="formatToolbar">
+        <button id="apply_alg" disabled>Apply Filter</button>
+    </div>
 </body>
 </html>

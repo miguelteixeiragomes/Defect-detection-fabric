@@ -10,8 +10,9 @@ define(['core/context'], function(Context){
 
     function initProcessingControllers(){
         require(['processing/imageLoad'], function(ImageLoadController){
+            console.log("estou no manager");
             ImageLoadController.init();
-        })
+        });
     }
 
     return{
