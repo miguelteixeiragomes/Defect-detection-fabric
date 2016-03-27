@@ -25,9 +25,11 @@ define(['core/manager'], function(Manager){
         if (fileExtension === "jpeg" || fileExtension === "jpg"
             || fileExtension === "gif" || fileExtension === "png")
         {
-            debugger;
             var imageLoadController = Manager.getContext().getImageLoadController();
             imageLoadController.loadImageByBlob(files[0]);
+
+            // Activate filters button
+            document.getElementById("black_and_white").disabled = false;
         }
         else
         {

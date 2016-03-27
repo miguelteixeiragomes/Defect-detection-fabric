@@ -1,34 +1,51 @@
 /**
  * Created by JoaoCosta on 20/03/16.
  */
+require(['app/runtime'], function(Runtime){
 
-define(['app/runtime'], function(runtime){
-
-    function loadImageByBlob(blob)
-    {
-        if(blob)
+    function ImageProcessingAPI(){
+        function loadImageByBlob(blob)
         {
-            var imageLoadController = runtime.getManager().getContext().getImageLoadController();
-            imageLoadController.loadImageByBlob(blob);
-            return true;
+            if(blob)
+            {
+                var manager = Runtime.getManager();
+                manager.initProcessingControllers();
+                var imageLoadController = manager.getContext().getImageLoadController();
+                imageLoadController.loadImageByBlob(blob);
+                return true;
+            }
         }
-        return false;
-    }
 
-    function loadImage(imgBase64)
-    {
-        if(imgBase64)
+        function loadImage(imgBase64, extension)
         {
-            var imageLoadController = runtime.getManager().getContext().getImageLoadController();
-            imageLoadController.loadImage(imgBase64);
-            return true;
+            if(imgBase64)
+            {
+                var manager = Runtime.getManager();
+                manager.initProcessingControllers();
+                var imageLoadController = manager.getContext().getImageLoadController();
+                imageLoadController.loadImage(imgBase64, extension);
+                return true;
+            }
         }
-        return false;
+
+        function blackAndWhite()
+        {
+            var filtersController = Runtime.getManager().getContext().getFiltersController();
+            return filtersController.applyBlackAndWhite();
+        }
+
+
+        return{
+            loadImageByBlob:    loadImageByBlob,
+            loadImage:          loadImage,
+            blackAndWhite:      blackAndWhite
+        };
     }
 
-    return{
-        loadImageByBlob:    loadImageByBlob,
-        loadImage:          loadImage
-    }
+    var ImageProcessor = {};
+    ImageProcessor.API = function(){
+        window.ImageProcessingAPI = ImageProcessingAPI();
+    };
+    ImageProcessor.API();
 
 });

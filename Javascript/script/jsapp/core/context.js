@@ -6,9 +6,16 @@ define(function(){
     "use strict";
 
     var imageLoadController;
+    var filtersController;
 
-    function setImageLoadController(controller){
-        imageLoadController = controller;
+    function setImageLoadController(ref)
+    {
+        imageLoadController = ref;
+    }
+
+    function setFiltersController(ref)
+    {
+        filtersController = ref;
     }
 
     function getImageLoadController()
@@ -16,8 +23,15 @@ define(function(){
         return imageLoadController;
     }
 
+    function getFiltersController()
+    {
+        return filtersController;
+    }
+
     return{
-        setImageLoadController:   setImageLoadController,
-        getImageLoadController:   getImageLoadController
+        setImageLoadController:     setImageLoadController,
+        setFiltersController:       setFiltersController,
+        getImageLoadController:     getImageLoadController,
+        getFiltersController:       getFiltersController
     }
 });
