@@ -131,47 +131,5 @@ def crop_around_center(image, width, height):
     return image[y1:y2, x1:x2]
 
 
-def demo():
-    """
-    Demos the largest_rotated_rect function
-    """
-
-    image = cv2.imread("lenna_rectangle.png")
-    image_height, image_width = image.shape[0:2]
-
-    cv2.imshow("Original Image", image)
-
-    print "Press [enter] to begin the demo"
-    print "Press [q] or Escape to quit"
-
-    key = cv2.waitKey(0)
-    if key == ord("q") or key == 27:
-        exit()
-
-    for i in np.arange(0, 360, 0.5):
-        image_orig = np.copy(image)
-        #image_rotated = rotate_image(image, i)
-        image_rotated_cropped = crop_around_center(
-            rotate_image(image, i),
-            *largest_rotated_rect(
-                image_width,
-                image_height,
-                math.radians(i)
-            )
-        )
-
-        key = cv2.waitKey(2)
-        if(key == ord("q") or key == 27):
-            exit()
-
-        cv2.imshow("Original Image", image_orig)
-        #cv2.imshow("Rotated Image", image_rotated)
-        cv2.imshow("Cropped Image", image_rotated_cropped)
-
-    print "Done"
-
 def ROTATE(image, angle):
     return crop_around_center( rotate_image( image, angle ), *largest_rotated_rect( image.shape[1], image.shape[0], math.radians( angle ) ) )
-
-if __name__ == "__main__":
-    demo()
