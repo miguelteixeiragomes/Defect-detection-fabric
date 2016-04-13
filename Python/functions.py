@@ -6,6 +6,7 @@ from scipy.integrate import dblquad
 from scipy.signal import convolve2d
 import matplotlib.cm as cm
 from image_rotation import ROTATE
+from numpy.fft import rfft, irfft, fft2
 
 def photo_angle(I):
     Gx = I[2:  , 1:-1] - I[ :-2, 1:-1]
@@ -13,7 +14,7 @@ def photo_angle(I):
     O  = np.arctan2(Gy, Gx)
     O *= 180./np.pi
     O[np.where(O < 0)] += 180.
-    return 90. - np.average(O, weights = np.sqrt(Gx*Gx + Gy*Gy))
+    return 90. - np.average(O)#, weights = np.sqrt(Gx*Gx + Gy*Gy))
 
 def compr(I, n):
     a = np.zeros((I.shape[0]//n, I.shape[1]//n))
@@ -37,6 +38,9 @@ def generateGaussianKernel2D(n):
         for j in range(n):
             ker[i, j] = np.exp(-((5*i + 2.5)/N - 2.5)**2) * np.exp(-((5*j + 2.5)/N - 2.5)**2)
     return ker / np.sum(ker)
+
+def gaussianBlur(I, n):
+    return convolve2d(I, generateGaussianKernel2D(n), mode = 'valid')
 
 def maxes(x):
     return [x[i] for i in range(1, len(x) - 1) if x[i] > max(x[i - 1], x[i + 1])]
@@ -65,12 +69,16 @@ def defect_detection(I, compression, firstGauss, secondGauss, threshold, represe
     img = compr(I, compression)
     if represent:
         pl.subplot(221)
+        #pl.imshow(np.log(np.abs(fft2(img))), cmap = 'Greys_r')
         pl.imshow(img, cmap = 'Greys_r')
         pl.axis('off')
     img = convolve2d(img, generateGaussianKernel2D(firstGauss), mode = 'valid')
     
     if rotate:
-        img = ROTATE(img, photo_angle(img))[1:-1, 1:-1]
+        print 'rotating'
+        ang = photo_angle(img)
+        print ang
+        img = ROTATE(img, ang)[1:-1, 1:-1]
     
     if represent:
         pl.figure(1)
@@ -90,10 +98,11 @@ def defect_detection(I, compression, firstGauss, secondGauss, threshold, represe
     
     if represent:
         pl.subplot(224)
-        pl.plot(img, ':')
+        #pl.plot(img, ':')
         
     img = np.convolve(img, generateGaussianKernel1D(secondGauss), mode = 'valid')
     
+    #img = irfft(rfft(img)[50:-50])
     if represent:
         pl.plot([0.]*(secondGauss//2) + list(img))
     
