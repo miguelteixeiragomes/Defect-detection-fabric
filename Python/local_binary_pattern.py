@@ -60,7 +60,46 @@ def mosaic_LBP_hist(I, x_n, y_n, BINS = 50, blur = 1):
     
     pl.show()
 
-I = imread('azul_com.jpg')
+def LBP_transform(I, win_size, scan_rate, BINS = 50, blur = 1):
+    win_size = [win_size]*2  if type(win_size) in [int, np.int, np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16, np.uint32, np.uint64]  else  win_size
+    scan_rate = [scan_rate]*2  if type(scan_rate) in [int, np.int, np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16, np.uint32, np.uint64]  else  scan_rate
+    
+    lbp = LBP(gaussianBlur(I, blur))
+    print lbp.shape
+    
+    Is = np.arange(0, lbp.shape[0] - win_size[0] - 1, scan_rate[0])
+    print Is.shape
+    Js = np.arange(0, lbp.shape[1] - win_size[1] - 1, scan_rate[1])
+    print Js.shape
+    
+    hists = np.zeros((len(Is), len(Js), BINS), np.float32)
+    print hists.shape
+    
+    x = 0
+    for i in Is:
+        y = 0
+        for j in Js:
+            hists[x, y] = np.histogram(lbp[ i:i+win_size[0]  ,  j:j+win_size[1] ].ravel(), bins = BINS, normed = True)[0]
+            y += 1
+        x += 1
+    
+    avg_hist = np.mean(hists, axis = (0, 1))
+    res = np.zeros((len(Is), len(Js)))
+    
+    for i in range(res.shape[0]):
+        for j in range(res.shape[1]):
+            res[i, j] = np.sum(np.abs(hists[i, j] - avg_hist)**2)
+            #res[i, j] = np.sum( (hists[i, j] - avg_hist)**2 / (hists[i, j] + avg_hist) )
+    
+    return res
+    
+
+
+I = imread('mov.png')
 I = np.average(I, axis = 2)
 I = compr(I, 2)
-mosaic_LBP_hist(I, 4, 4, blur = 50)
+#mosaic_LBP_hist(I, 8, 8, blur = 5)
+img = LBP_transform(I, win_size = 25, scan_rate = 2, BINS = 256, blur = 1)
+img = gaussianBlur(img, 1)
+pl.imshow(1*(img > .5*(img.max() + img.min())))
+pl.show()
