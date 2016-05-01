@@ -3,7 +3,7 @@ from gaussianSubSamplingPY import gaussianKernel
 import numpy as np
 import pyopencl as cl
 ####################################################################################
-ctx, queue, mf = get_ready_cl()
+ctx, queue, mf, device = get_ready_cl()
 prg = cl.Program(ctx, open('kernelsCL\\gaussianSubSamplingKernel.cl', 'r').read()).build()
 ####################################################################################
 

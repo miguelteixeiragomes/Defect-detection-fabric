@@ -26,10 +26,11 @@ def get_ready_cl(platform_idx = None  ,  device_idx = None):
     ctx   = cl.Context([my_device])
     queue = cl.CommandQueue(ctx)
     mf    = cl.mem_flags
-    return ctx, queue, mf
+    return ctx, queue, mf, my_device
 
 
 if __name__ == '__main__':
-    ctx, queue, mf = get_ready_cl()
-    prg = cl.Program(ctx, open('gaussianSubSamplingKernel.cl', 'r').read()).build()
+    ctx, queue, mf, device = get_ready_cl(1,1)
+    prg = cl.Program(ctx, open('kernelsCL\\gaussianSubSamplingKernel.cl', 'r').read()).build()
     print prg
+    print device.max_work_group_size
