@@ -40,33 +40,50 @@ def DT(I): # directional transform
     
 
 def DT2(I):
-    lst = [ 224 , 112 ,  56 ,  28 ,  14 ,   7 , 131 , 193 , 
-            240 , 120 ,  60 ,  30 ,  15 , 135 , 195 , 225 , 
-            248 , 124 ,  62 ,  31 , 143 , 199 , 227 , 241 ]
-    for i in range(24):
+    lst1 = [ 224 , 112 ,  56 ,  28 ,  14 ,   7 , 131 , 193 , \
+             240 , 120 ,  60 ,  30 ,  15 , 135 , 195 , 225 , \
+             248 , 124 ,  62 ,  31 , 143 , 199 , 227 , 241 ] # edges e corners
+    lst1 = [ 240 , 120 ,  60 ,  30 ,  15 , 135 , 195 , 225 ] # so edges
+    lst1 = [60,30 ] # edge direcional
+    #lst1 += [195,225]
+    lst2 = []
+    for i in range(len(lst1)):
         for j in range(8):
-            lst.append( lst[j] ^ (2**j) )
+            elem = lst1[i] ^ (2**j)
+            if (elem not in lst1) and (elem not in lst2):
+                lst2.append( elem )
+                
     L  = localBinaryPattern(I)
     U  = np.zeros( L.shape , np.uint8 )
     U += 1*( (L >> 7) != (L >> 1) )
     for k in range(7):
         U += 1*(  ((L & 2**k) >> k) != ((L & 2**(k+1)) >> (k+1))  )
+    
     s  = np.zeros( U.shape , np.uint8 )
     for k in range(8):
         s += (L & 2**k) >> k
     
     R  = np.zeros( s.shape , np.uint8 )
-    for i in range(len(lst)):
-        R += 1*(L == lst[i])
-    R[:, :] = 127*(R > 0)    
-    R += 255*( (U == 2) * (s > 2) * (s < 5) )
+    for i in range(len(lst1)):
+        R += 255*(L == lst1[i])
     
-    for i in range(1):
+    for i in range(len(lst2)):
+        R += 127*(L == lst2[i])
+    
+    for i in range(2):
         mask = 1*(R[1:-1, 1:-1] == 127) # arranjar maneira de fazer o tresh nos vizinhos
-        
-        R[1:-1, 1:-1] += 128*(  )
-        
-    R[np.where(R == 127)] = 0    
+
+        R[1:-1, 1:-1] += 128*mask*( ( (R[2:  , 1:-1] == 255) + 
+                                      (R[ :-2, 1:-1] == 255) + 
+                                      (R[1:-1, 2:  ] == 255) + 
+                                      (R[1:-1,  :-2] == 255) + 
+                                      (R[2:  , 2:  ] == 255) + 
+                                      (R[ :-2,  :-2] == 255) + 
+                                      (R[ :-2, 2:  ] == 255) + 
+                                      (R[2:  ,  :-2] == 255) ) > 0 )
+    
+    R = R[1:-1, 1:-1]
+    R[np.where(R == 127)] = 0
     return R
 
 
@@ -85,13 +102,19 @@ if __name__ == '__main__':
         pl.show()
 
     if test == 'DT':
-        I = np.average( imread('com.png') , axis = 2 )
-        I = gaussianSubSampling(I, 15, 1)
+        from scipy.ndimage.filters import gaussian_filter as gauss
+        I = np.average( imread('com_2.png') , axis = 2 )#[100:120, 100:120]
+        I = gaussianSubSampling(I, 20, 1)
         D = DT2(I)
         print D.shape
         #D = gaussianSubSampling(D, 5)
+        pl.figure('lbp')
         pl.subplot(121)
         pl.imshow( I , cmap = 'Greys_r' )
         pl.subplot(122)
         pl.imshow( D , cmap = 'Greys_r' )
+        pl.figure('plot')
+        gr = gauss(np.average(D, axis = 0), 15.0)
+        gr -= np.average(gr)
+        pl.plot(gr)
         pl.show()
