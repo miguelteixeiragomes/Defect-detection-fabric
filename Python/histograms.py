@@ -23,7 +23,7 @@ if __name__ == '__main__':
     from localBinaryPattern import localBinaryPattern
     #from histogramsPY import histogramsPY
     
-    I = np.average( imread('linhas.png') , axis = 2 )
+    I = np.average( imread('com.png') , axis = 2 )
     I = gaussianSubSampling(I, 15)
     L = np.uint8( localBinaryPattern(I) )
     Ti = clock()
