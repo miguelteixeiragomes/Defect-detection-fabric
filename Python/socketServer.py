@@ -1,22 +1,35 @@
 import socketio
 import eventlet
 from flask import Flask
+import time
 
 # Define Socket.IO server and application wrapper
 sio = socketio.Server()
 app = Flask(__name__)
 
-@sio.on('connect', namespace = '/test')
+@sio.on('connect')
 def connect(sid, environ):
     print 'New Connection ' + sid
-    sio.emit("server_response", sid, room = sid, namespace = '/test' )
 
-@sio.on('message', namespace = '/test')
-def message(sid, data):
-    print 'message ' + sid + " " + data
-    sio.emit("server_reply", data = "Hello", room = sid, namespace = '/test')
+@sio.on('id_request')
+def id_request_handler(sid):
+    print "Client: " + sid + " sent a personal ID request"
+    sio.emit("register_id", sid, room = sid)
+    # return sid
 
-@sio.on('disconnect', namespace = '/test')
+@sio.on("permission_request")
+def permission_request_handler(sid):
+    print "Client: " + sid + " sent a permission request"
+    # check if everything id ready to receive a picture
+    sio.emit("permission_granted", True, room = sid)
+
+@sio.on("image")
+def image_handler(sid, base64):
+    print "Client: " + sid + " sent an image"
+    # Process the image here then emit permission to get another
+    sio.emit("permission_granted", True, room = sid)
+
+@sio.on('disconnect')
 def disconnect(sid):
     print 'disconnect ' + sid
 
@@ -25,4 +38,4 @@ if __name__ == '__main__':
     app = socketio.Middleware(sio, app)
 
     # Deploy as an eventlet WSGI server
-    eventlet.wsgi.server(eventlet.listen(('',8000)), app)
+    eventlet.wsgi.server(eventlet.listen(('',5000)), app)
