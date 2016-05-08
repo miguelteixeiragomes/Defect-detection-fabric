@@ -26,8 +26,9 @@ def permission_request_handler(sid):
 @sio.on("image")
 def image_handler(sid, base64):
     print "Client: " + sid + " sent an image"
-    # Process the image here then emit permission to get another
+    # Process the image here then emit permission to get another or stop process
     sio.emit("permission_granted", True, room = sid)
+    # sio.emit("kill_machine", room = sid)
 
 @sio.on('disconnect')
 def disconnect(sid):
