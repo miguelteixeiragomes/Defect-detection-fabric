@@ -1,7 +1,5 @@
 from socketIO_client import SocketIO
 import imageController as imc
-import base64
-import os
 
 def on_registerID(personalID):
     print "My personal register ID is: " + str(personalID)
@@ -13,6 +11,8 @@ def on_permission(data):
     fileName = imc.capturePicture()
     imageBase64 = imc.convertToBase64(fileName)
     sio.emit("image", imageBase64)
+    # Destroy picture
+    imc.remove(fileName)
 
 # Establish the connection & initialize
 # IP needs to be changed to correct server's IP
