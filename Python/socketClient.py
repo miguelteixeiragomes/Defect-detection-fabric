@@ -1,19 +1,24 @@
 from socketIO_client import SocketIO
-import time
+import imageController as imc
+import base64
+import os
 
 def on_registerID(personalID):
     print "My personal register ID is: " + str(personalID)
     registerID = personalID
 
 def on_permission(data):
-    print data
+    print "Server Permission: " + str(data)
     # Take picture send base64 to Server
-    imageBase64 = "123"
+    fileName = imc.capturePicture()
+    imageBase64 = imc.convertToBase64(fileName)
     sio.emit("image", imageBase64)
 
 # Establish the connection & initialize
-sio = SocketIO('localhost', 5000)
+# IP needs to be changed to correct server's IP
+sio = SocketIO('192.168.1.88', 5000)
 
+# Request for personal ID
 sio.emit("id_request")
 sio.on("register_id", on_registerID)
 
