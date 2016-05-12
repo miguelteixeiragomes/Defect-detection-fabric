@@ -1,7 +1,7 @@
 import socketio
 import eventlet
 from flask import Flask
-import time
+import analysisController as anc
 
 # Define Socket.IO server and application wrapper
 sio = socketio.Server()
@@ -24,11 +24,16 @@ def permission_request_handler(sid):
     sio.emit("permission_granted", True, room = sid)
 
 @sio.on("image")
-def image_handler(sid, base64):
+def image_handler(sid, imgBase64):
     print "Client: " + sid + " sent an image"
     # Process the image here then emit permission to get another or stop process
-    sio.emit("permission_granted", True, room = sid)
-    # sio.emit("kill_machine", room = sid)
+    fileName = anc.createImage(sid, imgBase64)
+    detectionResult = anc.analyseImage(fileName)
+    if detectionResult:
+        sio.emit("permission_granted", True, room=sid)
+    else:
+        sio.emit("kill_machine", room = sid)
+    anc.deleteImage(fileName)
 
 @sio.on('disconnect')
 def disconnect(sid):
@@ -37,6 +42,5 @@ def disconnect(sid):
 if __name__ == '__main__':
     # Wrap Flask application with Socket.IO's middleware
     app = socketio.Middleware(sio, app)
-
     # Deploy as an eventlet WSGI server
     eventlet.wsgi.server(eventlet.listen(('',5000)), app)
