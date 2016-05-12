@@ -39,6 +39,10 @@ This function deletes an image
 def deleteFile(fileName):
     os.remove(fileName)
 
+def killProcess():
+    # Control machine here
+    return True
+
 if __name__ == "__main__":
     imgBase64Encode = convertToBase64("input.png")
     im = Image.open(BytesIO(base64.decodestring(imgBase64Encode)))

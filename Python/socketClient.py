@@ -14,6 +14,10 @@ def on_permission(data):
     # Destroy picture
     imc.remove(fileName)
 
+def on_kill():
+    imc.killProcess()
+    return True
+
 # Establish the connection & initialize
 # IP needs to be changed to correct server's IP
 sio = SocketIO('192.168.1.88', 5000)
@@ -25,5 +29,6 @@ sio.on("register_id", on_registerID)
 # Ask for permission to send picture and wait for the grant
 sio.emit("permission_request")
 sio.on("permission_granted",on_permission)
+sio.on("kill_machine", on_kill)
 
 sio.wait()
