@@ -24,6 +24,8 @@ def getGrid(s, l, theta):
     
     Y += x
     
+    X += .5*(l - X.max())
+    
     return X, Y
 
 
@@ -63,7 +65,7 @@ if __name__ == '__main__':
     test = ['1', '2', '3'][1]
     
     if test == '1': # Oh yeah!!
-        x, y = getGrid(300., 400., 50 * np.pi/180.)
+        x, y = getGrid(300., 400., 33.75 * np.pi/180.)
         a, b = np.meshgrid(np.arange(401.), np.arange(301.) )
         pl.contourf( a, b , np.zeros(a.shape)+1. )
         pl.contourf( x , y , np.zeros(x.shape)+1. , cmap = 'Greys_r')
@@ -72,7 +74,7 @@ if __name__ == '__main__':
     
     if test == '2':
         from time import clock
-        angle = 45  *  np.pi/180.
+        angle = 33.75  *  np.pi/180.
         pl.subplot(121)
         pl.imshow(I, cmap = 'Greys_r')
         X, Y = getGrid(I.shape[0]-1, I.shape[1]-1, angle)
