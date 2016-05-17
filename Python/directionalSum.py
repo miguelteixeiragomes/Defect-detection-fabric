@@ -40,10 +40,10 @@ if __name__ == '__main__':
     from scipy.ndimage.filters import gaussian_filter as gaussFilter
     
     I = np.average( imread('com.png') , axis = 2 )
-    I = gaussianSubSampling(I , 10)
-    I = rotate(I, 180)
+    I = gaussianSubSampling(I , 12)
+    I = rotate(I, -45)
     
-    L = directionalLBP(I , '1-0' , 10)
+    L = directionalLBP(I , '1/0' , 10)
 
     pl.figure('lbp')
     pl.subplot(121)
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     pl.figure('2')
     S = L - np.average(L)
     #gr = gaussFilter( np.average(S, axis = 0) , 0.0 )
-    gr = gaussFilter( directionalSum(S, '-') , 0.0 )
+    gr = gaussFilter( directionalSum(S, '/') , 0.0 )
     gr -= np.average(gr)
     pl.plot(gr)
     pl.show()

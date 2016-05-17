@@ -24,7 +24,7 @@ def directionalLBP(I, patternList = '0|1' , neighbors = 0 ):
         elif patternList == '0-1':
             patternList = [0b11110000, 0b01111000]
         elif patternList == '1-0':
-            patternList = [0b11100001, 0b11000011]
+            patternList = [0b00001111, 0b01111000]
 
         elif patternList == '0/1':
             patternList = [0b01111000, 0b00111100]
@@ -32,18 +32,18 @@ def directionalLBP(I, patternList = '0|1' , neighbors = 0 ):
             patternList = [0b11000011, 0b10000111]
 
         elif patternList == '0\\1':
-            patternList = [0b11110000, 0b11100001]
-        elif patternList == '1\\0':
             patternList = [0b00001111, 0b00011110]
+        elif patternList == '1\\0':
+            patternList = [0b11110000, 0b11100001]
         
         elif patternList == '|':
             patternList = [0b00011110, 0b00111100, 0b11100001, 0b11000011]
         elif patternList == '-':
-            patternList = [0b10000111, 0b00001111, 0b11110000, 0b01111000]
+            patternList = [0b11110000, 0b01111000, 0b00001111, 0b01111000]
         elif patternList == '/':
             patternList = [0b01111000, 0b00111100, 0b11000011, 0b10000111]
         elif patternList == '\\':
-            patternList = [0b11110000, 0b11100001, 0b00001111, 0b00011110]
+            patternList = [0b00001111, 0b00011110, 0b11110000, 0b11100001]
         
         else:
             raise ValueError("Invalid text command: '" + str(patternList) + "'.")

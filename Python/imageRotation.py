@@ -12,7 +12,7 @@ def getGrid(s, l, theta):
     
     X = np.arange(0.0, a, 1.0)#.astype(np.float32)
     Y = np.arange(0.0, b, 1.0)#.astype(np.float32)
-    X, Y = np.meshgrid(X, Y)
+    X, Y = np.meshgrid(X, Y, indexing = 'ij')
     
     R = np.sqrt(X*X + Y*Y)
     O = np.arctan2(Y, X)
@@ -29,19 +29,19 @@ def getGrid(s, l, theta):
     return X, Y
 
 
-def rotateUpTo90_horizontal(I, theta, spline = 3):
+def rotateUpTo90_horizontal(I, theta, spline = 1):
     if not (0. < theta < .5*np.pi):
         raise ValueError('The angle must be given in radians between 0 and pi/2.')
     if I.shape[0] > I.shape[1]:
         raise ValueError('The image must either be square or an horizontal rectangle.')
         
-    inter = RectBivariateSpline(np.arange(I.shape[0]), np.arange(I.shape[1]), I, kx = spline, ky = spline)
-    x, y  = getGrid( I.shape[1] - 1  ,  I.shape[0] - 1  ,  theta )
+    inter = RectBivariateSpline(np.arange(I.shape[1]), np.arange(I.shape[0]), I[:, ::-1].T, kx = spline, ky = spline)
+    x, y  = getGrid( I.shape[0] - 1  ,  I.shape[1] - 1  ,  theta )
     R = inter.__call__(x, y, grid = False)
-    return R.T
+    return R.T[:, ::-1]
 
 
-def rotate(I, angle): # theta given in degrees
+def rotate(I, angle, spline = 1): # theta given in degrees
     theta = angle % 360.
     if theta == 0.:
         R = np.zeros( I.shape , I.dtype )
@@ -51,10 +51,13 @@ def rotate(I, angle): # theta given in degrees
     if theta >= 90.:
         return rotate( I.T[::-1, :] , theta - 90. )
     
-    theta *= np.pi/180.
-    
-    
-    return rotateUpTo90_horizontal()
+    if I.shape[0] <= I.shape[1]:
+        return rotateUpTo90_horizontal(I, theta*np.pi/180., spline)
+    else:
+        R = rotate(I, -90)
+        R = rotate(R, theta)
+        R = rotate(R, 90)
+        return R
     
 
 if __name__ == '__main__':
@@ -62,19 +65,22 @@ if __name__ == '__main__':
     from scipy.ndimage import imread
     I = imread('dados.png')
     I = np.average(I, axis = 2)
-    test = ['1', '2', '3'][1]
+    test = ['1', '2', '3'][2]
     
     if test == '1': # Oh yeah!!
-        x, y = getGrid(300., 400., 33.75 * np.pi/180.)
-        a, b = np.meshgrid(np.arange(401.), np.arange(301.) )
-        pl.contourf( a, b , np.zeros(a.shape)+1. )
-        pl.contourf( x , y , np.zeros(x.shape)+1. , cmap = 'Greys_r')
+        x, y = getGrid(600., 800., 45 * np.pi/180.)
+        print x.shape, y.shape
+#        print x,'\n'
+#        print y
+        a, b = np.meshgrid(np.arange(801.), np.arange(601.) )
+        pl.contourf( a, b , np.zeros(a.shape)+1., alpha = .5)
+        pl.contourf( x , y , np.zeros(x.shape)+1. , cmap = 'Greys_r', alpha = .5)
         pl.axes().set_aspect('equal', 'datalim')
         pl.show()
     
     if test == '2':
         from time import clock
-        angle = 33.75  *  np.pi/180.
+        angle = 22.5  *  np.pi/180.
         pl.subplot(121)
         pl.imshow(I, cmap = 'Greys_r')
         X, Y = getGrid(I.shape[0]-1, I.shape[1]-1, angle)
@@ -85,16 +91,20 @@ if __name__ == '__main__':
         R = rotateUpTo90_horizontal(I, angle, 3)
         print clock() - Ti
         pl.imshow(R, cmap = 'Greys_r')
-        
         pl.show()
     
     if test == '3':
-        angle = 0.
+        from time import clock
+        angle = 22.5
         pl.subplot(121)
         pl.imshow(I, cmap = 'Greys_r')
+        pl.axis('off')
         
         pl.subplot(122)
+        Ti = clock()
         R = rotate(I, angle)
+        print 'time =', round(clock() - Ti, 2), 's'
         pl.imshow(R, cmap = 'Greys_r')
+        pl.axis('off')
         
         pl.show()
