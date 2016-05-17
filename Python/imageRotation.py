@@ -65,7 +65,7 @@ if __name__ == '__main__':
     from scipy.ndimage import imread
     I = imread('dados.png')
     I = np.average(I, axis = 2)
-    test = ['1', '2', '3'][2]
+    test = ['1', '2', '3'][1]
     
     if test == '1': # Oh yeah!!
         x, y = getGrid(600., 800., 45 * np.pi/180.)

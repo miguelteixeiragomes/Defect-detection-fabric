@@ -8,61 +8,78 @@ from imageRotation         import rotate
 from scipy.ndimage.filters import gaussian_filter as gaussianFilter
 
 
-def singelImageAnalysis(G, command1, command2, threshold):
-    #print '\n', command1 , command2 # comment for fast detection
-    #pl.imshow(G, cmap = 'Greys_r');pl.show() # comment for fast detection
+def singelImageAnalysis(G, command1, command2, threshold, display = False):
+    if display:
+        pl.figure('cmd1: %s  ,  %s' % (command1, command2))
+        pl.subplot(221)
+        pl.title('blurred image')
+        pl.imshow(G, cmap = 'Greys_r')
+        pl.axis('off')
+        
     A  = directionalLBP(G , command1, 20)
-    #pl.imshow(A, cmap = 'Greys_r');pl.colorbar();pl.show() # comment for fast detection
-    #print np.average(A) # comment for fast detection
+    if display:
+        pl.subplot(222)
+        pl.title('special LBP')
+        pl.imshow(A, cmap = 'Greys_r')
+        pl.axis('off')
+        
     L = A - np.average(A)
-    #pl.contourf(L, cmap = 'Greys_r');pl.colorbar();pl.show() # comment for fast detection
     L  = directionalSum(L , command2)
-    #pl.plot(L);pl.show() # comment for fast detection
     L -= np.average(L)
     L *= L
-    #pl.plot(L);pl.show() # comment for fast detection
+    if display:
+        pl.subplot(223)
+        pl.title('blurred squared summation')
+        pl.plot(L, 'r--')
+        
     L  = gaussianFilter(L, 5.0)
-    #pl.plot(L);pl.show() # comment for fast detection
+    if display:
+        pl.plot(L)
+        
     L  = maxs(L)
-    #pl.plot(L);pl.show() # comment for fast detection
+    if display:
+        pl.subplot(224)
+        pl.title('maxes')
+        pl.plot(L, 'r--')
+        pl.show()
+
     M  = max(L)
     del(L[L.index(M)])
-    #pl.plot(L);pl.show() # comment for fast detection
     return M > threshold*max(L)
 
 
-def eightDirectionAnalysis(G, threshold):
-    if singelImageAnalysis(G , '0|1' , '|' , threshold) and singelImageAnalysis(G , '1|0' , '|' , threshold):
+def eightDirectionAnalysis(G, threshold, display):
+    if singelImageAnalysis(G , '0|1' , '|' , threshold, display) and singelImageAnalysis(G , '1|0' , '|' , threshold, display):
         return True
         
-    if singelImageAnalysis(G , '0-1' , '-' , threshold) and singelImageAnalysis(G , '1-0' , '-' , threshold):
+    if singelImageAnalysis(G , '0-1' , '-' , threshold, display) and singelImageAnalysis(G , '1-0' , '-' , threshold, display):
         return True
     
-    if singelImageAnalysis(G , '0/1' , '/' , threshold) and singelImageAnalysis(G , '1/0' , '/' , threshold):
+    if singelImageAnalysis(G , '0/1' , '/' , threshold, display) and singelImageAnalysis(G , '1/0' , '/' , threshold, display):
         return True
 
-    if singelImageAnalysis(G , '0\\1' , '\\' , threshold) and singelImageAnalysis(G , '1\\0' , '\\' , threshold):
+    if singelImageAnalysis(G , '0\\1' , '\\' , threshold, display) and singelImageAnalysis(G , '1\\0' , '\\' , threshold, display):
         return True
     
     return False
 
 
-def fullAnalysis(I, blurRadius, threshold):
+def fullAnalysis(I, blurRadius, threshold, display = False):
     G = gaussianSubSampling(I , blurRadius)
     
-    if eightDirectionAnalysis(G, threshold):
+    if eightDirectionAnalysis(G, threshold, display):
         return True
     
     R = rotate(G, 22.5)
-    if eightDirectionAnalysis(R, threshold):
+    if eightDirectionAnalysis(R, threshold, display):
         return True
         
     R = rotate(G, 11.25)
-    if eightDirectionAnalysis(R, threshold):
+    if eightDirectionAnalysis(R, threshold, display):
         return True
 
     R = rotate(G, 33.75)
-    if eightDirectionAnalysis(R, threshold):
+    if eightDirectionAnalysis(R, threshold, display):
         return True
     
     else:
@@ -76,5 +93,5 @@ if __name__ == '__main__':
     I = rotate(I, 56) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    print 'defect:', fullAnalysis( I , 15 , 2.0)
+    print 'defect:', fullAnalysis( I , 15 , 2.0, display = True)
     print 'detected in:', round(clock() - Ti, 2), 's'
