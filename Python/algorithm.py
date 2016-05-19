@@ -9,6 +9,7 @@ from scipy.ndimage.filters import gaussian_filter as gaussianFilter
 
 
 def singelImageAnalysis(G, command1, command2, threshold, display = False):
+    print '\t', command1
     if display:
         pl.figure('cmd1: %s  ,  %s' % (command1, command2))
         pl.subplot(221)
@@ -30,7 +31,7 @@ def singelImageAnalysis(G, command1, command2, threshold, display = False):
     if display:
         pl.subplot(223)
         pl.title('blurred squared summation')
-        pl.plot(L, 'r--')
+        pl.plot(L, 'r:')
         
     L  = gaussianFilter(L, 5.0)
     if display:
@@ -40,7 +41,7 @@ def singelImageAnalysis(G, command1, command2, threshold, display = False):
     if display:
         pl.subplot(224)
         pl.title('maxes')
-        pl.plot(L, 'r--')
+        pl.plot(L,)
         pl.show()
 
     M  = max(L)
@@ -67,18 +68,22 @@ def eightDirectionAnalysis(G, threshold, display):
 def fullAnalysis(I, blurRadius, threshold, display = False):
     G = gaussianSubSampling(I , blurRadius)
     
+    print 'angle:', 0.0
     if eightDirectionAnalysis(G, threshold, display):
         return True
     
     R = rotate(G, 22.5)
+    print 'angle:', 22.5
     if eightDirectionAnalysis(R, threshold, display):
         return True
         
     R = rotate(G, 11.25)
+    print 'angle:', 11.25
     if eightDirectionAnalysis(R, threshold, display):
         return True
 
     R = rotate(G, 33.75)
+    print 'angle:', 33.75
     if eightDirectionAnalysis(R, threshold, display):
         return True
     
@@ -90,8 +95,9 @@ if __name__ == '__main__':
     from scipy.ndimage import imread
     from time import clock
     I = np.average( imread('com.png') , axis = 2 )
-    I = rotate(I, 56) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
+    #I = rotate(I, 0) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    print 'defect:', fullAnalysis( I , 15 , 2.0, display = True)
+    b = fullAnalysis( I , 30 , 2.0, display = False)
+    print 'defect:', b
     print 'detected in:', round(clock() - Ti, 2), 's'
