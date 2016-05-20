@@ -42,21 +42,9 @@ def homogeneity(coM):
     return np.sum( coM / np.float64(1 + np.abs(i - j)) )
 
 
-def GLCM(I, winSize, scanRate, direction, analysis = [dissimilarity, contrast, asm, energy, correlation, homogeneity], levels = 256):
-    lenX = (I.shape[0] - winSize[0])//scanRate[0]
-    lenY = (I.shape[1] - winSize[1])//scanRate[1]
-    points = np.zeros((lenX*lenY, len(analysis)))
-    
-    for i in range(lenX):
-        for j in range(lenY):
-            points[i*lenY + j] = [ function( I[ i*scanRate[0]:i*scanRate[0]+winSize[0]  ,  j*scanRate[1]:j*scanRate[1]+winSize[1] ] ) for function in analysis ]
-    
-    return points
-
-
 def pointsAnalysis(points, shape, winSize, scanRate):
     avg = np.array([ np.average(points[:, i]) for i in range(points.shape[1]) ])
-    std = 1.*np.array([ np.std(points[:, i]) for i in range(points.shape[1]) ])
+    std = 3.0*np.array([ np.std(points[:, i]) for i in range(points.shape[1]) ])
     
     r = ((points[:, 0] - avg[0])/std[0])**2
     for i in range(1, points.shape[1]):
@@ -95,6 +83,18 @@ def grid(shape, winSize):
     return r
 
 
+def GLCM(I, winSize, scanRate, direction, analysis = [dissimilarity, contrast, asm, energy, correlation, homogeneity], levels = 256):
+    lenX = (I.shape[0] - winSize[0])//scanRate[0]
+    lenY = (I.shape[1] - winSize[1])//scanRate[1]
+    points = np.zeros((lenX*lenY, len(analysis)))
+    
+    for i in range(lenX):
+        for j in range(lenY):
+            points[i*lenY + j] = [ function( I[ i*scanRate[0]:i*scanRate[0]+winSize[0]  ,  j*scanRate[1]:j*scanRate[1]+winSize[1] ] ) for function in analysis ]
+    
+    return points
+
+
 if __name__ == '__main__':
     test = ['co_oc_m', 'GLCM'][1]
     
@@ -112,15 +112,15 @@ if __name__ == '__main__':
         from time import clock
         import pylab as pl
         I = np.average( imread('com.png') , axis = 2 )
-        I = gaussianSubSampling(I, 12)
+        I = gaussianSubSampling(I, 15)
         I = np.uint8(np.around(I))
         
         winSize   = (20, 20)
         scanRate  = (2, 2)
-        direction = (0, 1)
+        direction = (1, 1)
         
         Ti = clock()
-        points = GLCM( I , winSize , scanRate , direction )[:, (0,-3)]
+        points = GLCM( I , winSize , scanRate , direction )[:, (2,-2)]
         imgPnts, scatterPnts = pointsAnalysis(points, I.shape, winSize, scanRate)
         print 'GLCM:', round(clock() - Ti, 3), 's'
         
