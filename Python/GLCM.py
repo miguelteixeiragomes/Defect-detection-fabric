@@ -54,6 +54,47 @@ def GLCM(I, winSize, scanRate, direction, analysis = [dissimilarity, contrast, a
     return points
 
 
+def pointsAnalysis(points, shape, winSize, scanRate):
+    avg = np.array([ np.average(points[:, i]) for i in range(points.shape[1]) ])
+    std = 1.*np.array([ np.std(points[:, i]) for i in range(points.shape[1]) ])
+    
+    r = ((points[:, 0] - avg[0])/std[0])**2
+    for i in range(1, points.shape[1]):
+        r += ((points[:, i] - avg[i])/std[i])**2
+    
+    lenX = (shape[0] - winSize[0])//scanRate[0]
+    lenY = (shape[1] - winSize[1])//scanRate[1]
+    
+    a = np.reshape(r, (lenX, lenY))
+    x, y = np.where( a > 1 )
+    x = .5*winSize[0] + scanRate[0]*x
+    y = .5*winSize[0] + scanRate[1]*y
+    print x
+    print y
+    
+    return (y, x), points[ tuple(np.where(r > 1)[0]) , : ]
+
+
+def grid(shape, winSize):
+    lenX = (shape[0] - winSize[0])//winSize[0]
+    lenY = (shape[1] - winSize[1])//winSize[1]
+    r = np.zeros( I.shape , np.int8 )
+    s = np.zeros( I.shape , np.int8 )
+    i = 0
+    while i*winSize[0] < I.shape[0]:
+        r[ i*winSize[0]: , : ] ^= 1
+        i += 1
+    j = 0
+    while j*winSize[1] < I.shape[1]:
+        s[ : , j*winSize[1]: ] ^= 1
+        j += 1
+    r = r ^ s
+    del(s)
+    r = np.float32(r)
+    r[np.where(r == 0)] = np.nan
+    return r
+
+
 if __name__ == '__main__':
     test = ['co_oc_m', 'GLCM'][1]
     
@@ -66,15 +107,29 @@ if __name__ == '__main__':
         print co_ocurrence_marix(I , (1,1))
 
     if test == 'GLCM':
+        from gaussianSubSampling import gaussianSubSampling
         from scipy.ndimage import imread
+        from time import clock
         import pylab as pl
-        I = np.uint8(np.around(np.average( imread('com.png') , axis = 2 )))
+        I = np.average( imread('com.png') , axis = 2 )
+        I = gaussianSubSampling(I, 12)
+        I = np.uint8(np.around(I))
         
-        points = GLCM( I , (20,20) , (5,5) , (0,1) )
+        winSize   = (20, 20)
+        scanRate  = (2, 2)
+        direction = (0, 1)
+        
+        Ti = clock()
+        points = GLCM( I , winSize , scanRate , direction )[:, (0,-3)]
+        imgPnts, scatterPnts = pointsAnalysis(points, I.shape, winSize, scanRate)
+        print 'GLCM:', round(clock() - Ti, 3), 's'
         
         pl.subplot(121)
         pl.imshow(I, cmap = 'Greys_r')
+        pl.imshow(grid(I.shape, winSize), alpha = .1)
+        pl.scatter(*imgPnts, alpha = .5)
         #pl.axis('off')
         pl.subplot(122)
-        pl.scatter(points[:, 3], points[:, -2], alpha = .1)
+        pl.scatter(points[:, 0], points[:, 1], alpha = .05)
+        pl.scatter(scatterPnts[:, 0], scatterPnts[:, 1], c = 'r')
         pl.show()

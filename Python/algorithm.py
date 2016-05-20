@@ -98,6 +98,6 @@ if __name__ == '__main__':
     #I = rotate(I, 0) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 30 , 2.0, display = False)
+    b = fullAnalysis( I , 12 , 2.0, display = True)
     print 'defect:', b
     print 'detected in:', round(clock() - Ti, 2), 's'
