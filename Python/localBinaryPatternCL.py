@@ -10,15 +10,15 @@ def localBinaryPatternCL(I_h): # melhoramento de ~5x
     R_h = np.zeros( (I.shape[0] - 2, I.shape[1] - 2) , np.uint8)
     
     I_d        = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
-    R_d        = cl.Buffer(ctx, mf.READ_WRITE , size = (I.shape[0] - 2)*(I.shape[1] - 2))
+    R_d        = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
 
-    prg.LBP_transform(queue, R_h.shape, None, I_d, R_d).wait()
+    prg.LBP(queue, R_h.shape, None, I_d, R_d).wait()
     
     cl.enqueue_copy(queue, R_h, R_d)
     return R_h
 
 
-def directionalLBP_CL(I, patternList = '0|1' , neighbors = 0 ):
+def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 0 ):
     if type(patternList) == str:
         if patternList == '0|1':
             patternList = [0b00011110, 0b00111100]
@@ -59,48 +59,35 @@ def directionalLBP_CL(I, patternList = '0|1' , neighbors = 0 ):
             if elem not in patternList:
                 if elem not in nearMissList:
                     nearMissList.append( elem )
-                
-    L  = localBinaryPattern(I)
-    U  = np.zeros( L.shape , np.uint8 )
-    U += 1*( (L >> 7) != (L >> 1) )
-    for k in range(7):
-        U += 1*(  ((L & 2**k) >> k) != ((L & 2**(k+1)) >> (k+1))  )
+    patternList_h  = np.uint8(np.array(patternList))
+    nearMissList_h = np.uint8(np.array(nearMissList))
     
-    s  = np.zeros( U.shape , np.uint8 )
-    for k in range(8):
-        s += (L & 2**k) >> k
+    R_h = np.zeros( (I.shape[0] - 2, I.shape[1] - 2) , np.uint8)
     
-    R  = np.zeros( s.shape , np.uint8 )
-    for i in range(len(patternList)):
-        R += 255*(L == patternList[i])
+    patternList_d  = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = patternList_h)    
+    nearMissList_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = nearMissList_h)   
+    I_d            = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
+    R_d            = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
     
-    for i in range(len(nearMissList)):
-        R += 127*(L == nearMissList[i])
+    prg.LBP(queue, R_h.shape, None, I_d, R_d).wait()
+    prg.directionalPatterns(queue, R_h.shape, None, R_d, patternList_d, np.uint16(len(patternList)), nearMissList_d, np.uint16(len(nearMissList))).wait()
+    for i in range(neighborRange):
+        prg.neighborCorrection(queue, R_h.shape, None, R_d).wait()
     
-    for i in range(neighbors):
-        mask = 1*(R[1:-1, 1:-1] == 127)
-
-        R[1:-1, 1:-1] += 128*mask*( ( (R[2:  , 1:-1] == 255) + 
-                                      (R[ :-2, 1:-1] == 255) + 
-                                      (R[1:-1, 2:  ] == 255) + 
-                                      (R[1:-1,  :-2] == 255) + 
-                                      (R[2:  , 2:  ] == 255) + 
-                                      (R[ :-2,  :-2] == 255) + 
-                                      (R[ :-2, 2:  ] == 255) + 
-                                      (R[2:  ,  :-2] == 255) ) > 0 )
+    prg.cleanUp(queue, R_h.shape, None, R_d).wait()
     
-    R = R[1:-1, 1:-1]
-    R[np.where(R == 127)] = 0
-    return R
+    cl.enqueue_copy(queue, R_h, R_d)
+    return R_h[1:-1,1:-1]
 
 
-if __name__ == '__main__':
+
+if __name__ == '__main__': # 0.00483932963738
     from time import clock
-    from localBinaryPatternPY import localBinaryPatternPY
+    from localBinaryPatternPY import localBinaryPatternPY, directionalLBP_PY
     from gaussianSubSampling import gaussianSubSampling
     import pylab as pl
     from scipy.ndimage import imread
-    test = ['LBP', 'DT'][0]
+    test = ['LBP', 'DT'][1]
     
     if test == 'LBP':
         I = np.average( imread('com_2.png') , axis = 2 )
@@ -112,8 +99,29 @@ if __name__ == '__main__':
         CL = localBinaryPatternCL(I)
         print 'LBP_CL time:', clock() - Ti
 
-        pl.subplot(121)
+        pl.subplot(131)
         pl.imshow( PY , cmap = 'Greys_r' )
-        pl.subplot(122)
+        pl.subplot(132)
         pl.imshow( CL , cmap = 'Greys_r' )
+        pl.subplot(133)
+        pl.imshow( np.abs(CL - PY) , cmap = 'Greys_r' )
+        pl.show()
+    
+    if test == 'DT':
+        I = np.average( imread('com_2.png') , axis = 2 )
+        I = gaussianSubSampling(I, 15, 1)
+        
+        Ti = clock()
+        PY = directionalLBP_PY(I, '0|1', 100)
+        print 'LBP_PY time:', clock() - Ti
+        Ti = clock()
+        CL = directionalLBP_CL(I, '0|1', 100)
+        print 'LBP_CL time:', clock() - Ti
+        
+        pl.subplot(131)
+        pl.imshow( PY , cmap = 'Greys_r' )
+        pl.subplot(132)
+        pl.imshow( CL , cmap = 'Greys_r' )
+        pl.subplot(133)
+        pl.imshow( np.abs(CL - PY) , cmap = 'Greys_r' )
         pl.show()

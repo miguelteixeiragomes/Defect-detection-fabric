@@ -14,7 +14,7 @@ def localBinaryPatternPY(I):
     return R
 
 
-def directionalLBP(I, patternList = '0|1' , neighbors = 0 ):
+def directionalLBP_PY(I, patternList = '0|1' , neighborRange = 0 ):
     if type(patternList) == str:
         if patternList == '0|1':
             patternList = [0b00011110, 0b00111100]
@@ -56,24 +56,16 @@ def directionalLBP(I, patternList = '0|1' , neighbors = 0 ):
                 if elem not in nearMissList:
                     nearMissList.append( elem )
                 
-    L  = localBinaryPattern(I)
-    U  = np.zeros( L.shape , np.uint8 )
-    U += 1*( (L >> 7) != (L >> 1) )
-    for k in range(7):
-        U += 1*(  ((L & 2**k) >> k) != ((L & 2**(k+1)) >> (k+1))  )
+    L  = localBinaryPatternPY(I)
     
-    s  = np.zeros( U.shape , np.uint8 )
-    for k in range(8):
-        s += (L & 2**k) >> k
-    
-    R  = np.zeros( s.shape , np.uint8 )
+    R  = np.zeros( L.shape , np.uint8 )
     for i in range(len(patternList)):
         R += 255*(L == patternList[i])
     
     for i in range(len(nearMissList)):
         R += 127*(L == nearMissList[i])
     
-    for i in range(neighbors):
+    for i in range(neighborRange):
         mask = 1*(R[1:-1, 1:-1] == 127)
 
         R[1:-1, 1:-1] += 128*mask*( ( (R[2:  , 1:-1] == 255) + 
@@ -95,7 +87,7 @@ if __name__ == '__main__':
     from gaussianSubSampling import gaussianSubSampling
     import pylab as pl
     from scipy.ndimage import imread
-    test = ['LBP', 'DT'][0]
+    test = ['LBP', 'DT'][1]
     
     if test == 'LBP':
         I = np.average( imread('com_3.png') , axis = 2 )
@@ -110,10 +102,10 @@ if __name__ == '__main__':
     if test == 'DT':
         from scipy.ndimage.filters import gaussian_filter as gauss
         from imageRotation import rotate
-        I = np.average( imread('com_2.png') , axis = 2 )#[100:120, 100:120]
+        I = np.average( imread('com.png') , axis = 2 )#[100:120, 100:120]
         I = rotate(I, 0)
-        I = gaussianSubSampling(I, 20, 1)
-        D = directionalLBP(I)
+        I = gaussianSubSampling(I, 15, 1)
+        D = directionalLBP_PY(I)
         print D.shape
         #D = gaussianSubSampling(D, 5)
         pl.figure('lbp')
