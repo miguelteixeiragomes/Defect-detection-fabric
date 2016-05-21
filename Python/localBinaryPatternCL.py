@@ -112,10 +112,10 @@ if __name__ == '__main__': # 0.00483932963738
         I = gaussianSubSampling(I, 15, 1)
         
         Ti = clock()
-        PY = directionalLBP_PY(I, '0|1', 100)
+        PY = directionalLBP_PY(I, '0|1', 10)
         print 'LBP_PY time:', clock() - Ti
         Ti = clock()
-        CL = directionalLBP_CL(I, '0|1', 100)
+        CL = directionalLBP_CL(I, '0|1', 10)
         print 'LBP_CL time:', clock() - Ti
         
         pl.subplot(131)

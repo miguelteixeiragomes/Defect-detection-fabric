@@ -1,14 +1,19 @@
-unsigned int ravel_idx(unsigned short i, unsigned short j, unsigned short Lj)
+#define i  get_global_id(0)
+#define j  get_global_id(1)
+#define Lx get_global_size(0)
+#define Ly get_global_size(1)
+
+inline unsigned int ravel_idx(unsigned short idx1, unsigned short idx2, unsigned short len2)
 {
-    return Lj*i + j;
+    return len2*idx1 + idx2;
 }
 
 
 __kernel void LBP(__global float* I, __global unsigned char* R)
 {
-    unsigned short i  = get_global_id(0);
-    unsigned short j  = get_global_id(1);
-    unsigned short Ly = get_global_size(1);
+//    unsigned short i  = get_global_id(0);
+//    unsigned short j  = get_global_id(1);
+//    unsigned short Ly = get_global_size(1);
     
     float pixel = I[ravel_idx(i + 1, j + 1, Ly + 2)];
     unsigned char s = 0;
@@ -31,9 +36,9 @@ __kernel void LBP(__global float* I, __global unsigned char* R)
 
 __kernel void directionalPatterns(__global unsigned char* R, __global unsigned char* patterns, unsigned short patternsLen, __global unsigned char* nearMisses, unsigned short nearMissesLen)
 {
-    unsigned short i  = get_global_id(0);
-    unsigned short j  = get_global_id(1);
-    unsigned short Ly = get_global_size(1);
+//    unsigned short i  = get_global_id(0);
+//    unsigned short j  = get_global_id(1);
+//    unsigned short Ly = get_global_size(1);
 
     unsigned char pixel = R[ravel_idx(i, j, Ly)];
     unsigned char r = 0;
@@ -61,10 +66,10 @@ __kernel void directionalPatterns(__global unsigned char* R, __global unsigned c
 
 __kernel void neighborCorrection(__global unsigned char* R)
 {
-    unsigned short i  = get_global_id(0);
-    unsigned short j  = get_global_id(1);
-    unsigned short Lx = get_global_size(0);
-    unsigned short Ly = get_global_size(1);
+//    unsigned short i  = get_global_id(0);
+//    unsigned short j  = get_global_id(1);
+//    unsigned short Lx = get_global_size(0);
+//    unsigned short Ly = get_global_size(1);
     
     if ( (i > 0) && (i < (Lx - 1)) && (j > 0) && (j < (Ly - 1)) && (R[ravel_idx(i, j, Ly)] == 127) ){
         if (R[ravel_idx(i + 1, j    , Ly)] == 255) R[ravel_idx(i, j, Ly)] = 255;
@@ -90,9 +95,9 @@ __kernel void neighborCorrection(__global unsigned char* R)
 
 __kernel void cleanUp(__global unsigned char* R)
 {
-    unsigned short i  = get_global_id(0);
-    unsigned short j  = get_global_id(1);
-    unsigned short Ly = get_global_size(1);
+//    unsigned short i  = get_global_id(0);
+//    unsigned short j  = get_global_id(1);
+//    unsigned short Ly = get_global_size(1);
 
     R[ravel_idx(i, j, Ly)] = 255*( R[ravel_idx(i, j, Ly)]/128 );
 }
