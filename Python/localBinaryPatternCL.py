@@ -2,7 +2,7 @@ import numpy as np
 from initCL import get_ready_cl
 import pyopencl as cl
 
-ctx, queue, mf, device = get_ready_cl()
+ctx, queue, mf, device = get_ready_cl(1,1)
 prg = cl.Program(ctx, open('kernelsCL\\lbpTransformKernel.cl', 'r').read()).build()
 ##########################################################################################
 
@@ -74,7 +74,7 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 0 ):
     for i in range(neighborRange):
         prg.neighborCorrection(queue, R_h.shape, None, R_d).wait()
     
-    prg.cleanUp(queue, R_h.shape, None, R_d).wait()
+    prg.cleanUp(queue, np.array(R_h.shape) - 2, None, R_d).wait()
     
     cl.enqueue_copy(queue, R_h, R_d)
     return R_h[1:-1,1:-1]
@@ -108,14 +108,14 @@ if __name__ == '__main__': # 0.00483932963738
         pl.show()
     
     if test == 'DT':
-        I = np.average( imread('com_2.png') , axis = 2 )
+        I = np.average( imread('com.png') , axis = 2 )
         I = gaussianSubSampling(I, 15, 1)
         
         Ti = clock()
-        PY = directionalLBP_PY(I, '0|1', 10)
+        PY = directionalLBP_PY(I, '0|1', 1)
         print 'LBP_PY time:', clock() - Ti
         Ti = clock()
-        CL = directionalLBP_CL(I, '0|1', 10)
+        CL = directionalLBP_CL(I, '0|1', 1)
         print 'LBP_CL time:', clock() - Ti
         
         pl.subplot(131)
@@ -123,5 +123,6 @@ if __name__ == '__main__': # 0.00483932963738
         pl.subplot(132)
         pl.imshow( CL , cmap = 'Greys_r' )
         pl.subplot(133)
-        pl.imshow( np.abs(CL - PY) , cmap = 'Greys_r' )
+        pl.imshow( (np.float32(CL) - np.float32(PY)) , cmap = 'Greys_r' )
+        pl.colorbar()
         pl.show()
