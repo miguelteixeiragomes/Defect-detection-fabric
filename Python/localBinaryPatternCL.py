@@ -2,7 +2,7 @@ import numpy as np
 from initCL import get_ready_cl
 import pyopencl as cl
 
-ctx, queue, mf, device = get_ready_cl()
+ctx, queue, mf, device = get_ready_cl(1,1)
 prg = cl.Program(ctx, open('kernelsCL\\lbpTransformKernel.cl', 'r').read()).build()
 ##########################################################################################
 
