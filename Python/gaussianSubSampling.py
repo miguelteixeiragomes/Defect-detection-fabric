@@ -8,6 +8,13 @@ except:
     print "\tInstall the damned openCL fool!"
 
 
+def leiDeTojo(blur):
+    if type(blur) in [tuple, list, np.ndarray]:
+        if len(blur) == 2:
+            return min( leiDeTojo(blur[0]) , leiDeTojo(blur[1]) )
+    return blur // 3
+
+
 def gaussianSubSampling(img, blurRadius, n = 1):
     blurRadiusTpl = blurRadius  if  (type(blurRadius) in [tuple, list, np.ndarray])  else  (blurRadius, blurRadius)
     nTpl = n  if  (type(n) in [tuple, list, np.ndarray])  else  (n, n)
@@ -18,6 +25,6 @@ def gaussianSubSampling(img, blurRadius, n = 1):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     import pylab as pl
-    I = np.average( imread('com_2.png') , axis = 2 )
-    pl.imshow( gaussianSubSampling( I , 15 , 5 ) , cmap = 'Greys_r' )
+    I = np.average( imread('com.png') , axis = 2 )
+    pl.imshow( gaussianSubSampling( I , 15 , 3 ) , cmap = 'Greys_r' )
     pl.show()

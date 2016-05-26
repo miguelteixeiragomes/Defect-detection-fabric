@@ -3,6 +3,7 @@ import os
 import time
 from PIL import Image
 from io import BytesIO
+from algorithm import analyser
 # Import algorithm main Here
 
 def createImage(sid, imgBase64):
@@ -16,9 +17,7 @@ def createImage(sid, imgBase64):
     return fileName
 
 def analyseImage(fileName):
-    # This Result should be given by the algorithm
-    result = True
-    return result
+    return analyser(fileName)
 
 def deleteImage(fileName):
     os.remove(fileName)
