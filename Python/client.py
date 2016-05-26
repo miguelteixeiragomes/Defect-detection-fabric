@@ -20,7 +20,7 @@ def on_kill():
 
 # Establish the connection & initialize
 # IP needs to be changed to correct server's IP
-sio = SocketIO('192.168.1.88', 5000)
+sio = SocketIO('192.168.3.1', 5000)
 
 # Request for personal ID
 sio.emit("id_request")
