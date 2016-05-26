@@ -1,3 +1,4 @@
 # Files stated here are to be ignored by Git
 .idea/*
-/python/img_to_analyse/*
+Python/*.png
+Python/*.jpg
