@@ -62,7 +62,7 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 0 ):
     patternList_h  = np.uint8(np.array(patternList))
     nearMissList_h = np.uint8(np.array(nearMissList))
     
-    R_h = np.zeros( (I.shape[0] - 2, I.shape[1] - 2) , np.uint8)
+    R_h = np.zeros( (I_h.shape[0] - 2, I_h.shape[1] - 2) , np.uint8)
     
     patternList_d  = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = patternList_h)    
     nearMissList_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = nearMissList_h)   

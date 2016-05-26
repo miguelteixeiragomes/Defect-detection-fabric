@@ -94,10 +94,10 @@ def fullAnalysis(I, blurRadius, threshold, display = False):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     from time import clock
-    I = np.average( imread('com.png') , axis = 2 )
+    I = np.average( imread('sem.png') , axis = 2 )
     #I = rotate(I, 0) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 12 , 2.0, display = True)
+    b = fullAnalysis( I , 12 , 2.0, display = False)
     print 'defect:', b
     print 'detected in:', round(clock() - Ti, 2), 's'

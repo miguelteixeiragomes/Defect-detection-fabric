@@ -10,7 +10,7 @@ inline unsigned int ravel_idx(unsigned short idx1, unsigned short idx2, unsigned
 }
 
 
-float bilinearInterpolation(__global float* I, unsigned short Ly, float x, float y)
+float bilinearInterpolation(__global float* I, unsigned short Ly, float y, float x)
 {
     unsigned short x1, x2, y1, y2;
     float f11, f12, f21, f22;
@@ -34,5 +34,5 @@ __kernel void rotateUpTo90_horizontal(__global float* I, __global float* R, floa
     float X = r*cos(o) + 0.0f; // falta tratar de centrar o rectandulo quando ele nao toca as pontas.
     float Y = r*sin(o) + x;
 
-    R[ravel_idx(i, j, Lj)] = bilinearInterpolation(I, lenIy, X, Y);
+    R[ravel_idx(i, j, Lj)] = I[ravel_idx(i, j, lenIy)];//bilinearInterpolation(I, lenIy, X, Y);
 }
