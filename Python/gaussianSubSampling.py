@@ -18,6 +18,6 @@ def gaussianSubSampling(img, blurRadius, n = 1):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     import pylab as pl
-    I = np.average( imread('com.png') , axis = 2 )
-    pl.imshow( gaussianSubSampling( I , 15 ) , cmap = 'Greys_r' )
+    I = np.average( imread('com_2.png') , axis = 2 )
+    pl.imshow( gaussianSubSampling( I , 15 , 5 ) , cmap = 'Greys_r' )
     pl.show()
