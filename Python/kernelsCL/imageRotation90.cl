@@ -1,16 +1,17 @@
+//#define PI 3.141592653589793f
 #define i  get_global_id(0)
 #define j  get_global_id(1)
 #define Li get_global_size(0)
 #define Lj get_global_size(1)
 
 
-inline unsigned int ravel_idx(unsigned short idx1, unsigned short idx2, unsigned short len2)
+unsigned int ravel_idx(unsigned short idx1, unsigned short idx2, unsigned short len2)
 {
-    return idx1*len2 + idx2;
+    return idx2*len2 + (len2 - idx1 - 1);
 }
 
 
-float bilinearInterpolation(__global float* I, unsigned short Ly, float y, float x)
+float bilinearInterpolation(__global float* I, unsigned short Ly, float x, float y)
 {
     unsigned short x1, x2, y1, y2;
     float f11, f12, f21, f22;
@@ -26,13 +27,13 @@ float bilinearInterpolation(__global float* I, unsigned short Ly, float y, float
 }
 
 
-__kernel void rotateUpTo90_horizontal(__global float* I, __global float* R, float theta, float x, unsigned short lenIy)
+__kernel void rotateUpTo90_horizontal(__global float* I, __global float* R, float theta, float x, unsigned short lenIy, float offsetX)
 {
     float r = sqrt((float)(i*i + j*j));
     float o = atan2((float)(j), (float)(i)) - theta;
 
-    float X = r*cos(o) + 0.0f; // falta tratar de centrar o rectandulo quando ele nao toca as pontas.
+    float X = r*cos(o) + offsetX; // falta tratar de centrar o rectandulo quando ele nao toca as pontas.
     float Y = r*sin(o) + x;
 
-    R[ravel_idx(i, j, Lj)] = I[ravel_idx(i, j, lenIy)];//bilinearInterpolation(I, lenIy, X, Y);
+    R[ ravel_idx(i, j, Li) ] = bilinearInterpolation(I, lenIy, X, Y);
 }

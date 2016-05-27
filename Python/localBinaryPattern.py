@@ -5,7 +5,8 @@ try:
     print "\tKicking it up openCL style!"
 except:
     from localBinaryPatternPY import directionalLBP_PY as directionalLBP_Tmp
-    print "\tInstall the damned openCL fool!"
+    import random
+    print "\tInstall the damned openCL you %s!" % (random.choice(['fool', 'oaf', 'knave', 'varlet']),)
 
 
 def directionalLBP(img, patternList, neighborRange = 0):
