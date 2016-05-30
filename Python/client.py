@@ -4,16 +4,13 @@ import sys
 
 # This function handles the permission requests and responses
 def askForPermission():
-    sio.emit("permission_request")
-    # sio.on("permission", on_permission_response)
-    # sio.wait()
-    # Commented for future testing. Try this and the above. See what works
     sio.emit("permission_request", onPermisisonCallback)
     sio.wait_for_callbacks()
 
 # This function handles the process abortion
 def abortProcess():
-    sio.close()
+    print "Aborting process"
+    sio.disconnect()
     imc.killProcess()
     sys.exit("Process aborted")
 
@@ -21,7 +18,7 @@ def abortProcess():
 # In case there is NO DEFFECT, asks for permission to send another image
 # In case there IS A DEFFECT, aborts the process
 def imageAnalysisCallback(result):
-    print "Este foi o resultado da analise: " + result
+    print "Este foi o resultado da analise: " + str(result)
     if (result == False):
         askForPermission()
     else:
@@ -38,10 +35,12 @@ def on_registerID(personalID):
 def onPermisisonCallback(data):
     print "Server Permission: " + str(data)
     # Take picture send base64 to Server
-    fileName = imc.capturePicture()
-    imageBase64 = imc.convertToBase64(fileName)
-    # Destroy picture
-    imc.remove(fileName)
+##    fileName = imc.capturePicture()
+##    print fileName
+##    imageBase64 = imc.convertToBase64(fileName)
+##    # Destroy picture
+##    imc.remove(fileName)
+    imageBase64 = "123"
     # Send to server
     sio.emit("image", imageBase64, imageAnalysisCallback)
     sio.wait_for_callbacks()
@@ -50,7 +49,7 @@ if __name__ == "__main__":
     try:
         # Establish the connection & initialize
         # IP is set to Gil's mac
-        sio = SocketIO('192.168.3.1', 5000)
+        sio = SocketIO('192.168.1.10', 5000)
         # Request for personal ID
         sio.emit("id_request")
         sio.on("register_id", on_registerID)
