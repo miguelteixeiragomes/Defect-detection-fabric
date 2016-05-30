@@ -27,12 +27,9 @@ def image_handler(sid, imgBase64):
     print "Client: " + sid + " sent an image"
     # Process the image here then emit permission to get another or stop process
     fileName = anc.createImage(sid, imgBase64)
-    detectionResult = anc.analyseImage(fileName)
-    if detectionResult:
-        sio.emit("permission_granted", True, room=sid)
-    else:
-        sio.emit("kill_machine", room = sid)
+    analysisResult = anc.analyseImage(fileName)
     anc.deleteImage(fileName)
+    sio.emit("analysis_result", analysisResult, room = sid)
 
 @sio.on('disconnect')
 def disconnect(sid):
