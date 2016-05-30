@@ -10,7 +10,7 @@ def askForPermission():
 # This function handles the process abortion
 def abortProcess():
     print "Aborting process"
-    sio.disconnect()
+    sio.emit("disconnect")
     imc.killProcess()
     sys.exit("Process aborted")
 
@@ -35,12 +35,10 @@ def on_registerID(personalID):
 def onPermisisonResponse(data):
     print "Server Permission: " + str(data)
     # Take picture send base64 to Server
-##    fileName = imc.capturePicture()
-##    print fileName
-##    imageBase64 = imc.convertToBase64(fileName)
-##    # Destroy picture
-##    imc.remove(fileName)
-    imageBase64 = "123"
+    fileName = imc.capturePicture()
+    imageBase64 = imc.convertToBase64(fileName)
+    # Destroy picture - Commented for now
+    #imc.deleteImage(fileName)
     # Send to server
     sio.emit("image", imageBase64)
     sio.on("analysis_result", imageAnalysisResponse)

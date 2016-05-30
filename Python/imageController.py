@@ -12,16 +12,17 @@ And creating the image files
 Returns the file's name
 """
 def capturePicture():
-    # Prepare file name with current timestamp
-    timestr = time.strftime("%Y%m%d-%H%M%S")
-    fileName = "i-" + timestr + ".jpg"
-    # Capture image with the Pi Camera
-    file = open(fileName, 'wb')
-    with picamera.PiCamera() as camera:
-        camera.capture(file)
-    # Close and return file's name
-    file.close()
-    return fileName
+##    # Prepare file name with current timestamp
+##    timestr = time.strftime("%Y%m%d-%H%M%S")
+##    fileName = "i-" + timestr + ".jpg"
+##    # Capture image with the Pi Camera
+##    file = open(fileName, 'wb')
+##    with picamera.PiCamera() as camera:
+##        camera.capture(file)
+##    # Close and return file's name
+##    file.close()
+##    return fileName
+    return "input.png"
 
 """
 This function converts an image to it's
@@ -34,7 +35,7 @@ def convertToBase64(fileName):
 """
 This function deletes an image
 """
-def deleteFile(fileName):
+def deleteImage(fileName):
     os.remove(fileName)
 
 def killProcess():
