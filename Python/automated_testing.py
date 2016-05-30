@@ -10,8 +10,9 @@ from time import localtime
 
 def updateParamList(parameterList, img, defect):
     i = 0
+    L = len(parameterList)
     while i < len(parameterList):
-        print '\t', i, '/', len(parameterList)
+        print '\t', round((len(parameterList) - i) *100. / float(L), 1), '%'
         if fullAnalysis(img, parameterList[i][0], parameterList[i][1], parameterList[i][2]) != defect:
             del(parameterList[i])
         else:
@@ -49,9 +50,9 @@ def testing_siml(images_dir_com, images_dir_sem, fG, sG, threshold):
 def testing(images_dir_com, images_dir_sem, fG, sG, threshold):    
     t = localtime()
     
-    fileName_params = 'ParamsList_' + str(fG.min()) + '_' + str(fG.max()) + '_' + str(fG[1] - fG[0]) + '_' + 
-                                      str(sG.min()) + '_' + str(sG.max()) + '_' + str(sG[1] - sG[0]) + '_' + 
-                                      str(threshold.min()) + '_' + str(threshold.max()) + '_' + str(threshold[1] - threshold[0]) + '_' + '.p'
+    fileName_params = 'simls\\ParamsList_' + str(fG.min()) + '_' + str(fG.max()) + '_' + str(fG[1] - fG[0]) + '_' + \
+                                             str(sG.min()) + '_' + str(sG.max()) + '_' + str(sG[1] - sG[0]) + '_' + \
+                                             str(threshold.min()) + '_' + str(threshold.max()) + '_' + str(threshold[1] - threshold[0]) + '_' + '.p'
     
     try:
         paramList = pickle.load( open( fileName_params, "rb" ) )
