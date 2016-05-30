@@ -20,7 +20,7 @@ def id_request_handler(sid):
 def permission_request_handler(sid):
     print "Client: " + sid + " sent a permission request"
     # check if everything id ready to receive a picture
-    sio.emit("permission_granted", True, room = sid)
+    return True
 
 @sio.on("image")
 def image_handler(sid, imgBase64):
