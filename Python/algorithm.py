@@ -102,10 +102,10 @@ def analyser(filePath):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     from time import clock
-    I = np.average( imread('com.png') , axis = 2 )
+    I = np.average( imread('com_defeito\\com.png') , axis = 2 )
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 12 , 5.0 , 2.0, display = True)
+    b = fullAnalysis( I , 12 , 5.0 , 2.0, display = False)
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'

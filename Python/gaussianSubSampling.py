@@ -12,7 +12,7 @@ def leiDeTojo(blur):
     if type(blur) in [tuple, list, np.ndarray]:
         if len(blur) == 2:
             return min( leiDeTojo(blur[0]) , leiDeTojo(blur[1]) )
-    return blur // 4
+    return max( blur // 4  ,  1 )
 
 
 def gaussianSubSampling(img, blurRadius, n = -1):

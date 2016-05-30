@@ -30,7 +30,7 @@ def get_ready_cl(platform_idx = None  ,  device_idx = None):
 
 
 if __name__ == '__main__':
-    ctx, queue, mf, device = get_ready_cl(1,1)
+    ctx, queue, mf, device = get_ready_cl(0,0)
     prg = cl.Program(ctx, open('kernelsCL\\gaussianSubSamplingKernel.cl', 'r').read()).build()
     print prg
     print device.max_work_group_size
