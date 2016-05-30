@@ -18,6 +18,8 @@ def capturePicture():
     # Capture image with the Pi Camera
     file = open(fileName, 'wb')
     with picamera.PiCamera() as camera:
+        camera.preview()
+        time.sleep(2)
         camera.capture(file)
     # Close and return file's name
     file.close()

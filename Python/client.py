@@ -5,11 +5,11 @@ import sys
 # This function handles the permission requests and responses
 def askForPermission():
     sio.emit("permission_request")
-    sio.on("permission", on_permission_response)
-    sio.wait()
+    # sio.on("permission", on_permission_response)
+    # sio.wait()
     # Commented for future testing. Try this and the above. See what works
-    #sio.emit("permission_request", on_permission_response)
-    #sio.wait_for_callbacks()
+    sio.emit("permission_request", onPermisisonCallback)
+    sio.wait_for_callbacks()
 
 # This function handles the process abortion
 def abortProcess():
@@ -35,7 +35,7 @@ def on_registerID(personalID):
 # This function handles the permission granted response
 # Prepares the image data and sends it to the server
 # Waits for response callback
-def on_permission_response(data):
+def onPermisisonCallback(data):
     print "Server Permission: " + str(data)
     # Take picture send base64 to Server
     fileName = imc.capturePicture()
@@ -53,11 +53,12 @@ if __name__ == "__main__":
         sio = SocketIO('192.168.3.1', 5000)
         # Request for personal ID
         sio.emit("id_request")
-        sio.on("register_id", on_registerID)          
-        # Wait for response
-        sio.wait()
+        sio.on("register_id", on_registerID)
+        print "passei esta merda"
         # Ask for permission
         askForPermission()
+        # Wait for response
+        sio.wait()
     except KeyboardInterrupt:
         # User interrupted, abort process
         print "Abort by user interrupt"
