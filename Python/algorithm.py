@@ -53,16 +53,16 @@ def singelImageAnalysis(G, command1, command2, blur1D, threshold, display = Fals
 
 
 def eightDirectionAnalysis(G, blur1D, threshold, display):
-    if singelImageAnalysis(G , '0|1' , '|' , blur1D , threshold, display) or singelImageAnalysis(G , '1|0' , '|' , blur1D , threshold, display):
+    if singelImageAnalysis(G , '0|1' , '|' , blur1D , threshold, display) and singelImageAnalysis(G , '1|0' , '|' , blur1D , threshold, display):
         return True
         
-    if singelImageAnalysis(G , '0-1' , '-' , blur1D , threshold, display) or singelImageAnalysis(G , '1-0' , '-' , blur1D , threshold, display):
+    if singelImageAnalysis(G , '0-1' , '-' , blur1D , threshold, display) and singelImageAnalysis(G , '1-0' , '-' , blur1D , threshold, display):
         return True
     
-    if singelImageAnalysis(G , '0/1' , '/' , blur1D , threshold, display) or singelImageAnalysis(G , '1/0' , '/' , blur1D , threshold, display):
+    if singelImageAnalysis(G , '0/1' , '/' , blur1D , threshold, display) and singelImageAnalysis(G , '1/0' , '/' , blur1D , threshold, display):
         return True
 
-    if singelImageAnalysis(G , '0\\1' , '\\' , blur1D , threshold, display) or singelImageAnalysis(G , '1\\0' , '\\' , blur1D , threshold, display):
+    if singelImageAnalysis(G , '0\\1' , '\\' , blur1D , threshold, display) and singelImageAnalysis(G , '1\\0' , '\\' , blur1D , threshold, display):
         return True
     
     return False
@@ -106,6 +106,6 @@ if __name__ == '__main__':
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 20 , 5.0 , 3.0, display = False)
+    b = fullAnalysis( I , 12 , 5.0 , 2.0, display = True)
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'
