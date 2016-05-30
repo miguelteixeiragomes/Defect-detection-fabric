@@ -4,9 +4,9 @@ import sys
 
 # This function handles the permission requests and responses
 def askForPermission():
-    sio.emit("permission_request", onPermisisonCallback)
-    sio.wait_for_callbacks()
-
+    sio.emit("permission_request")
+    sio.on("permission_granted", onPermisisonResponse)
+    
 # This function handles the process abortion
 def abortProcess():
     print "Aborting process"
@@ -17,7 +17,7 @@ def abortProcess():
 # This function is the callback for an image analysis request
 # In case there is NO DEFFECT, asks for permission to send another image
 # In case there IS A DEFFECT, aborts the process
-def imageAnalysisCallback(result):
+def imageAnalysisResponse(result):
     print "Este foi o resultado da analise: " + str(result)
     if (result == False):
         askForPermission()
@@ -32,7 +32,7 @@ def on_registerID(personalID):
 # This function handles the permission granted response
 # Prepares the image data and sends it to the server
 # Waits for response callback
-def onPermisisonCallback(data):
+def onPermisisonResponse(data):
     print "Server Permission: " + str(data)
     # Take picture send base64 to Server
 ##    fileName = imc.capturePicture()
@@ -42,8 +42,8 @@ def onPermisisonCallback(data):
 ##    imc.remove(fileName)
     imageBase64 = "123"
     # Send to server
-    sio.emit("image", imageBase64, imageAnalysisCallback)
-    sio.wait_for_callbacks()
+    sio.emit("image", imageBase64)
+    sio.on("analysis_result", imageAnalysisResponse)
 
 if __name__ == "__main__":
     try:
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         # Request for personal ID
         sio.emit("id_request")
         sio.on("register_id", on_registerID)
-        print "passei esta merda"
+        print "I'm registered on the server"
         # Ask for permission
         askForPermission()
         # Wait for response
