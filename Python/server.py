@@ -20,14 +20,16 @@ def id_request_handler(sid):
 def permission_request_handler(sid):
     print "Client: " + sid + " sent a permission request"
     # check if everything id ready to receive a picture
-    return True
+    sio.emit("permission_granted", True, room = sid)
 
 @sio.on("image")
 def image_handler(sid, imgBase64):
     print "Client: " + sid + " sent an image"
     # Process the image here then emit permission to get another or stop process
-    fileName = anc.createImage(sid, imgBase64)
-    return anc.analyseImage(fileName)
+    #fileName = anc.createImage(sid, imgBase64)
+    fileName = "123"
+    analysisResult = anc.analyseImage(fileName)
+    sio.emit("analysis_result", analysisResult, room = sid)
 
 @sio.on('disconnect')
 def disconnect(sid):

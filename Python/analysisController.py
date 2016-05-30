@@ -17,7 +17,8 @@ def createImage(sid, imgBase64):
 
 def analyseImage(fileName):
     # This Result should be given by the algorithm
-    result = True
+    result = False
+    time.sleep(0.5)
     return result
 
 def deleteImage(fileName):
