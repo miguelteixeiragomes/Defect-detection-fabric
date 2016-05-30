@@ -16,10 +16,8 @@ def capturePicture():
     timestr = time.strftime("%Y%m%d-%H%M%S")
     fileName = "i-" + timestr + ".jpg"
     # Capture image with the Pi Camera
-    file = open('my_image.jpg', 'wb')
+    file = open(fileName, 'wb')
     with picamera.PiCamera() as camera:
-        camera.start_preview()
-        time.sleep(2)
         camera.capture(file)
     # Close and return file's name
     file.close()
