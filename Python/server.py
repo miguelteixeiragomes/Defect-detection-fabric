@@ -26,9 +26,9 @@ def permission_request_handler(sid):
 def image_handler(sid, imgBase64):
     print "Client: " + sid + " sent an image"
     # Process the image here then emit permission to get another or stop process
-    #fileName = anc.createImage(sid, imgBase64)
-    fileName = "123"
+    fileName = anc.createImage(sid, imgBase64)
     analysisResult = anc.analyseImage(fileName)
+    anc.deleteImage(fileName)
     sio.emit("analysis_result", analysisResult, room = sid)
 
 @sio.on('disconnect')
