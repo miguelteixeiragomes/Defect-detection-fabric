@@ -12,7 +12,7 @@ def createImage(sid, imgBase64):
     fileName = sid + "-" + timeStr + ".jpg"
     # Decode base64 and save to file
     imgBuffer = Image.open(BytesIO(base64.decodestring(imgBase64)))
-    imgBuffer.save(fileName, "JPG")
+    imgBuffer.save(fileName, "JPEG")
     # Return file's name for reference
     return fileName
 

@@ -8,7 +8,7 @@ from imageRotation         import rotate
 from scipy.ndimage.filters import gaussian_filter as gaussianFilter
 
 
-def singelImageAnalysis(G, command1, command2, blur1D, threshold, display = False):
+def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, threshold, display = False):
     #print '\t', command1
     if display:
         pl.figure('cmd1: %s  ,  %s' % (command1, command2))
@@ -17,7 +17,7 @@ def singelImageAnalysis(G, command1, command2, blur1D, threshold, display = Fals
         pl.imshow(G, cmap = 'Greys_r')
         pl.axis('off')
         
-    A  = directionalLBP(G , command1, 20)
+    A  = directionalAnalyser(G , command1, 20)
     if display:
         pl.subplot(222)
         pl.title('special LBP')
@@ -53,16 +53,20 @@ def singelImageAnalysis(G, command1, command2, blur1D, threshold, display = Fals
 
 
 def eightDirectionAnalysis(G, blur1D, threshold, display):
-    if singelImageAnalysis(G , '0|1' , '|' , blur1D , threshold, display) and singelImageAnalysis(G , '1|0' , '|' , blur1D , threshold, display):
+    if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and 
+       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display):
         return True
         
-    if singelImageAnalysis(G , '0-1' , '-' , blur1D , threshold, display) and singelImageAnalysis(G , '1-0' , '-' , blur1D , threshold, display):
+    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and 
+       singelImageAnalysis(G , directionalLBP , '1-0' , '-' , blur1D , threshold, display):
         return True
     
-    if singelImageAnalysis(G , '0/1' , '/' , blur1D , threshold, display) and singelImageAnalysis(G , '1/0' , '/' , blur1D , threshold, display):
+    if singelImageAnalysis(G , directionalLBP , '0/1' , '/' , blur1D , threshold, display) and 
+       singelImageAnalysis(G , directionalLBP , '1/0' , '/' , blur1D , threshold, display):
         return True
 
-    if singelImageAnalysis(G , '0\\1' , '\\' , blur1D , threshold, display) and singelImageAnalysis(G , '1\\0' , '\\' , blur1D , threshold, display):
+    if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and 
+       singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display):
         return True
     
     return False
@@ -102,10 +106,10 @@ def analyser(filePath):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     from time import clock
-    I = np.average( imread('com_defeito\\com.png') , axis = 2 )
+    I = np.average( imread('picameraSem1.jpg') , axis = 2 )
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 12 , 5.0 , 2.0, display = False)
+    b = fullAnalysis( I , .1 , 5.0 , 2.0, display = False)
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'
