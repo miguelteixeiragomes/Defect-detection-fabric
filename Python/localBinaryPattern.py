@@ -9,7 +9,7 @@ except:
     print "\tInstall the damned openCL you %s!" % (random.choice(['fool', 'oaf', 'knave', 'varlet']),)
 
 
-def directionalLBP(img, patternList, neighborRange = 0):
+def directionalLBP(img, patternList, neighborRange = 20):
     return directionalLBP_Tmp( np.float32(img) , patternList , neighborRange )
 
 

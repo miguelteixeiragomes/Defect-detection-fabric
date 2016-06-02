@@ -17,14 +17,14 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
         pl.imshow(G, cmap = 'Greys_r')
         pl.axis('off')
         
-    A  = directionalAnalyser(G , command1, 20)
+    A  = directionalAnalyser(G , command1)
     if display:
         pl.subplot(222)
         pl.title('special LBP')
         pl.imshow(A, cmap = 'Greys_r')
         pl.axis('off')
         
-    L = A - np.average(A)
+    L  = A - np.average(A)
     L  = directionalSum(L , command2)
     L -= np.average(L)
     L *= L
@@ -54,19 +54,23 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
 
 def eightDirectionAnalysis(G, blur1D, threshold, display):
     if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display):
+       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display) or \
+       singelImageAnalysis(G , directionalLBP , '|' , '|' , blur1D , threshold, display):
         return True
         
     if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1-0' , '-' , blur1D , threshold, display):
+       singelImageAnalysis(G , directionalLBP , '1-0' , '-' , blur1D , threshold, display) or \
+       singelImageAnalysis(G , directionalLBP , '-' , '-' , blur1D , threshold, display):
         return True
     
     if singelImageAnalysis(G , directionalLBP , '0/1' , '/' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1/0' , '/' , blur1D , threshold, display):
+       singelImageAnalysis(G , directionalLBP , '1/0' , '/' , blur1D , threshold, display) or \
+       singelImageAnalysis(G , directionalLBP , '/' , '/' , blur1D , threshold, display):
         return True
 
     if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display):
+       singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display) or \
+       singelImageAnalysis(G , directionalLBP , '\\' , '\\' , blur1D , threshold, display):
         return True
     
     return False
@@ -110,6 +114,6 @@ if __name__ == '__main__':
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , .1 , 5.0 , 2.0, display = False)
+    b = fullAnalysis( I , .1 , 5.0 , 2.0, display = True)
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'
