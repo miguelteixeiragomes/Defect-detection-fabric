@@ -16,12 +16,15 @@ def connect(server, port):
     conn = httplib.HTTPConnection(server + ":" + str(port))
     conn.request("POST", "/socket.io/1/")
     resp = conn.getresponse()
+    print resp
     hskey = resp.read().split(":")[0]
+
+    print hskey
 
     # Init socket and event listening
     ws = websocket.WebSocket(
         "ws://" + server + ":" + str(port) + "/socket.io/1/websocket/" + hskey,
-        # event1 = handler1,
+        oncenas = _on_cenas
         # event2 = handler2,
         # event3 = handler3,
     )
@@ -40,11 +43,11 @@ if __name__ == "__main__":
         port = int(sys.argv[2])
     else:
         # Use default to connect to Gil's mac
-        server = "172.16.1.100"
+        server = "192.168.1.88"
         port = 5000
 
     # Init connection
-    ws = connect(server. port)
+    ws = connect(server, port)
 
     try:
         # Loop listening

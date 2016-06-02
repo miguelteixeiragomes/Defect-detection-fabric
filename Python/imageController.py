@@ -1,7 +1,7 @@
 import base64
 import os
 import time
-import picamera
+# import picamera
 # Delete these modules after testing
 from PIL import Image
 from io import BytesIO

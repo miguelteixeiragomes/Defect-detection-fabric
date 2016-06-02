@@ -2,6 +2,28 @@ from socketIO_client import SocketIO
 import imageController as imc
 import sys
 
+class SocketIOClient(SocketIO):
+    """
+    Fix for library bug
+    """
+
+    def _should_stop_waiting(self, for_connect=False, for_callbacks=False):
+        if for_connect:
+            for namespace in self._namespace_by_path.values():
+                is_namespace_connected = getattr(
+                    namespace, '_connected', False)
+                #Added the check and namespace.path
+                #because for the root namespaces, which is an empty string
+                #the attribute _connected is never set
+                #so this was hanging when trying to connect to namespaces
+                # this skips the check for root namespace, which is implicitly connected
+                if not is_namespace_connected and namespace.path:
+                    return False
+            return True
+        if for_callbacks and not self._has_ack_callback:
+            return True
+        return super(SocketIO, self)._should_stop_waiting()
+
 # This function handles the permission requests and responses
 def askForPermission():
     sio.emit("permission_request")
@@ -47,7 +69,7 @@ if __name__ == "__main__":
     try:
         # Establish the connection & initialize
         # IP is set to Gil's mac
-        sio = SocketIO('192.168.1.10', 5000)
+        sio = SocketIOClient('192.168.1.88', 5000)
         # Request for personal ID
         sio.emit("id_request")
         sio.on("register_id", on_registerID)
