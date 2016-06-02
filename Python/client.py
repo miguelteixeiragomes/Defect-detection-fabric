@@ -3,10 +3,6 @@ import imageController as imc
 import sys
 
 class SocketIOClient(SocketIO):
-    """
-    Fix for library bug
-    """
-
     def _should_stop_waiting(self, for_connect=False, for_callbacks=False):
         if for_connect:
             for namespace in self._namespace_by_path.values():
@@ -67,6 +63,7 @@ def onPermisisonResponse(data):
 
 if __name__ == "__main__":
     try:
+        # TODO: sys.argv
         # Establish the connection & initialize
         # IP is set to Gil's mac
         sio = SocketIOClient('192.168.1.88', 5000)
@@ -78,8 +75,8 @@ if __name__ == "__main__":
         askForPermission()
         # Wait for response
         sio.wait()
-    except KeyboardInterrupt:
-        # User interrupted, abort process
-        print "Abort by user interrupt"
+    except Exception as error:
+        # Error or user interrupt
+        print "Abort by user error or interrupt: " + str(error)
         abortProcess()
     

@@ -1,8 +1,7 @@
+# import picamera
 import base64
 import os
 import time
-# import picamera
-# Delete these modules after testing
 from PIL import Image
 from io import BytesIO
 
@@ -12,16 +11,16 @@ And creating the image files
 Returns the file's name
 """
 def capturePicture():
-##    # Prepare file name with current timestamp
-##    timestr = time.strftime("%Y%m%d-%H%M%S")
-##    fileName = "i-" + timestr + ".jpg"
-##    # Capture image with the Pi Camera
-##    file = open(fileName, 'wb')
-##    with picamera.PiCamera() as camera:
-##        camera.capture(file)
-##    # Close and return file's name
-##    file.close()
-##    return fileName
+    # # Prepare file name with current timestamp
+    # timestr = time.strftime("%Y%m%d-%H%M%S")
+    # fileName = "i-" + timestr + ".jpg"
+    # # Capture image with the Pi Camera
+    # file = open(fileName, 'wb')
+    # with picamera.PiCamera() as camera:
+    #     camera.capture(file)
+    # # Close and return file's name
+    # file.close()
+    # return fileName
     return "input.png"
 
 """
