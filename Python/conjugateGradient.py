@@ -6,13 +6,13 @@ def f(*x):
 
 
 def grad(function, x, dx):
-    return np.array( [ (.5/dx)*(f(x + np.array([0.]*i + [dx] + (len(x) - i - 1)*[0.])) - f(x - np.array([0.]*i + [dx] + (len(x) - i - 1)*[0.]))) for i in range(len(x)) ] )
+    return np.array( [ (.5/dx[i])*(function(x + np.array([0.]*i + [dx[i]] + (len(x) - i - 1)*[0.])) - function(x - np.array([0.]*i + [dx] + (len(x) - i - 1)*[0.]))) for i in range(len(x)) ] )
 
 def norm(v):
     return np.sqrt(np.sum(np.array(v)**2))
 
 
-def conjGradMax(function, x0, dx = .1, maxStep = .2, threshold = 1.):
+def conjGradMax(function, x0, dx = [.5, .5, .05], maxStep = .1, threshold = 1.):
     x = np.array(list(x0))
     lst = [np.array(list(x))]
     for i in range(9):
@@ -22,11 +22,13 @@ def conjGradMax(function, x0, dx = .1, maxStep = .2, threshold = 1.):
         x += (maxStep/n) * g
         lst.append(np.array(list(x)))
     
-    while np.sqrt(np.sum((lst[-10] - lst[-1])**2)) > threshold:
+    while True:
+    #while np.sqrt(np.sum((lst[-10] - lst[-1])**2)) > threshold:
         print 'x =', x
         g = grad(function, x, dx)
         n = norm(g)
-        x += (maxStep/n) * g
+        #x += (maxStep/n) * g
+        x += g * ((1 - np.exp(n/maxStep))*maxStep/n)
         lst.append(np.array(list(x)))
     
     return x
