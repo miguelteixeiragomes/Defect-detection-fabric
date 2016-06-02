@@ -20,7 +20,7 @@ if __name__ == '__main__':
     I = np.average(I, axis = 2)
     
     from time import clock
-    angle = 22.5
+    angle = 45.
     pl.subplot(121)
     pl.imshow(I, cmap = 'Greys_r')
     pl.axis('off')

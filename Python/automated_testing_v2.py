@@ -7,8 +7,8 @@ from os import listdir
 from os.path import isfile, join
 from conjugateGradient import conjGradMax
 
-images_dir_com = 'com_defeito\\'
-images_dir_sem = 'sem_defeito\\'
+images_dir_com = 'com\\'
+images_dir_sem = 'sem\\'
 images_com = [images_dir_com + f for f in listdir(images_dir_com) if isfile(join(images_dir_com, f)) and ('.png' in f  or  '.jpg' in f)]
 images_sem = [images_dir_sem + f for f in listdir(images_dir_sem) if isfile(join(images_dir_sem, f)) and ('.png' in f  or  '.jpg' in f)]        
 
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     test = ['function', 'parameterFinder'][1]
     
     if test == 'function':
-        print Q_function([1.24825119 , 10.01321442 , 1.22132229])
+        print Q_function([20.26015335 , 20.11543199  , 1.5])
         
     if test == 'parameterFinder':
-        print conjGradMax(Q_function, [1.24825119 , 10.01321442 , 1.22132229]) # last value [1.24825119 , 10.01321442 , 1.22132229]
+        print conjGradMax(Q_function, [20. , 20. , 1.5])

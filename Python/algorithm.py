@@ -1,11 +1,12 @@
 import numpy as np
 import pylab as pl
-from gaussianSubSampling import gaussianSubSampling
-from localBinaryPattern  import directionalLBP
-from directionalSum      import directionalSum
-from minMax              import maxs
-from imageRotation       import rotate
-from gaussianFilter      import gaussianFilter
+from gaussianSubSampling   import gaussianSubSampling
+from localBinaryPattern    import directionalLBP
+from directionalSum        import directionalSum
+from minMax                import maxs
+from imageRotation         import rotate
+from gaussianFilter        import gaussianFilter
+from directionalDerivative import directionalDerivative
 
 
 def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, threshold, display = False):
@@ -48,7 +49,9 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
     if len(L) > 1:
         M  = max(L)
         del(L[L.index(M)])
-        return M > threshold*max(L)
+#        return M > threshold*max(L)
+        
+        return M > (np.average(L) + 3.*np.std(L))
     
     return False
 
@@ -56,7 +59,7 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
 def eightDirectionAnalysis(G, blur1D, threshold, display):
     if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and \
        singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '|' , '|' , blur1D , threshold, display):
+       singelImageAnalysis(G , directionalDerivative , '|' , '|' , blur1D , threshold, display):
         return True
         
 #    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and \
@@ -111,10 +114,10 @@ def analyser(filePath):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     from time import clock
-    I = np.average( imread('sem.png') , axis = 2 )
+    I = np.average( imread('com\\c6.jpg') , axis = 2 )
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 12. , 12. , 1.5, display = False)
+    b = fullAnalysis( I , 20. , 20. , 1.5, display = 1)
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'
