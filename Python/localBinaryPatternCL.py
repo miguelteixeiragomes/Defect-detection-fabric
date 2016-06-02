@@ -1,9 +1,11 @@
 import numpy as np
 from initCL import get_ready_cl
 import pyopencl as cl
+import platform
+breaker = '\\' if platform.system() == 'Windows' else '/'
 
 ctx, queue, mf, device = get_ready_cl()
-prg = cl.Program(ctx, open('kernelsCL\\lbpTransformKernel.cl', 'r').read()).build()
+prg = cl.Program(ctx, open('kernelsCL' + breaker + 'lbpTransformKernel.cl', 'r').read()).build()
 ##########################################################################################
 
 def localBinaryPatternCL(I_h): # melhoramento de ~5x

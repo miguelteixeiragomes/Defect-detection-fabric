@@ -53,19 +53,19 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
 
 
 def eightDirectionAnalysis(G, blur1D, threshold, display):
-    if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and 
+    if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and \
        singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display):
         return True
         
-    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and 
+    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and \
        singelImageAnalysis(G , directionalLBP , '1-0' , '-' , blur1D , threshold, display):
         return True
     
-    if singelImageAnalysis(G , directionalLBP , '0/1' , '/' , blur1D , threshold, display) and 
+    if singelImageAnalysis(G , directionalLBP , '0/1' , '/' , blur1D , threshold, display) and \
        singelImageAnalysis(G , directionalLBP , '1/0' , '/' , blur1D , threshold, display):
         return True
 
-    if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and 
+    if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and \
        singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display):
         return True
     

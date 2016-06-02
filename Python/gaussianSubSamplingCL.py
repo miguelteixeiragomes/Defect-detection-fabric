@@ -2,9 +2,11 @@ from initCL import get_ready_cl
 from gaussianSubSamplingPY import gaussianKernel
 import numpy as np
 import pyopencl as cl
+import platform
+breaker = '\\' if platform.system() == 'Windows' else '/'
 ####################################################################################
 ctx, queue, mf, device = get_ready_cl()
-prg = cl.Program(ctx, open('kernelsCL\\gaussianSubSamplingKernel.cl', 'r').read()).build()
+prg = cl.Program(ctx, open('kernelsCL' + breaker + 'gaussianSubSamplingKernel.cl', 'r').read()).build()
 ####################################################################################
 
 
