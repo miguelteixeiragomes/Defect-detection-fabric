@@ -65,18 +65,22 @@ class WSClient():
     # This function handles the case
     # Where a permission to send an image is given
     def permissionGranted(self):
-        # Take picture send base64 to Server
-        fileName = imc.capturePicture()
-        imageBase64 = imc.convertToBase64(fileName)
-        # Destroy picture - Commented for now
-        # imc.deleteImage(fileName)
-        # Send to server
-        message = {
-            "msgType": "image",
-            "msgContent": imageBase64
-        }
-        message = json.dumps(message)
-        self.ws.send(message)
+        try:
+            # Take picture send base64 to Server
+            fileName = imc.capturePicture()
+            imageBase64 = imc.convertToBase64(fileName)
+            # Destroy picture - Commented for now
+            # imc.deleteImage(fileName)
+            # Send to server
+            message = {
+                "msgType": "image",
+                "msgContent": imageBase64
+            }
+            message = json.dumps(message)
+            self.ws.send(message)
+        except Exception as error:
+            print "Failed to capture image or transfer to server: " + str(error)
+            self.ws.close()
 
     # This function handles the
     # Response to an image analysis
