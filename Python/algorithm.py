@@ -1,11 +1,11 @@
 import numpy as np
 import pylab as pl
-from gaussianSubSampling   import gaussianSubSampling
-from localBinaryPattern    import directionalLBP
-from directionalSum        import directionalSum
-from minMax                import maxs
-from imageRotation         import rotate
-from scipy.ndimage.filters import gaussian_filter as gaussianFilter
+from gaussianSubSampling import gaussianSubSampling
+from localBinaryPattern  import directionalLBP
+from directionalSum      import directionalSum
+from minMax              import maxs
+from imageRotation       import rotate
+from gaussianFilter      import gaussianFilter
 
 
 def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, threshold, display = False):
