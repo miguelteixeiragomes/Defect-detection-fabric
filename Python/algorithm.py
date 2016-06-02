@@ -41,7 +41,8 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
     if display:
         pl.subplot(224)
         pl.title('maxes')
-        pl.plot(L,)
+        pl.plot(range(len(L)), L)
+        pl.scatter(range(len(L)), L)
         pl.show()
 
     if len(L) > 1:
@@ -54,23 +55,23 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
 
 def eightDirectionAnalysis(G, blur1D, threshold, display):
     if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display) or \
+       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display) and \
        singelImageAnalysis(G , directionalLBP , '|' , '|' , blur1D , threshold, display):
         return True
         
-    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1-0' , '-' , blur1D , threshold, display) or \
-       singelImageAnalysis(G , directionalLBP , '-' , '-' , blur1D , threshold, display):
-        return True
-    
-    if singelImageAnalysis(G , directionalLBP , '0/1' , '/' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1/0' , '/' , blur1D , threshold, display) or \
-       singelImageAnalysis(G , directionalLBP , '/' , '/' , blur1D , threshold, display):
-        return True
-
-    if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display) or \
-       singelImageAnalysis(G , directionalLBP , '\\' , '\\' , blur1D , threshold, display):
+#    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '1-0' , '-' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '-' , '-' , blur1D , threshold, display):
+#        return True
+#    
+#    if singelImageAnalysis(G , directionalLBP , '0/1' , '/' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '1/0' , '/' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '/' , '/' , blur1D , threshold, display):
+#        return True
+#
+#    if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '\\' , '\\' , blur1D , threshold, display):
         return True
     
     return False
@@ -83,20 +84,20 @@ def fullAnalysis(I, blurRadius, blur1D, threshold, display = False):
     if eightDirectionAnalysis(G, blur1D, threshold, display):
         return True
     
-    R = rotate(G, 22.5)
+    R = rotate(G, 15.)
     #print 'angle:', 22.5
     if eightDirectionAnalysis(R, blur1D, threshold, display):
         return True
         
-    R = rotate(G, 11.25)
+    R = rotate(G, -15.)
     #print 'angle:', 11.25
     if eightDirectionAnalysis(R, blur1D, threshold, display):
         return True
 
-    R = rotate(G, 33.75)
-    #print 'angle:', 33.75
-    if eightDirectionAnalysis(R, blur1D, threshold, display):
-        return True
+#    R = rotate(G, 33.75)
+#    #print 'angle:', 33.75
+#    if eightDirectionAnalysis(R, blur1D, threshold, display):
+#        return True
     
     else:
         return False
@@ -110,10 +111,10 @@ def analyser(filePath):
 if __name__ == '__main__':
     from scipy.ndimage import imread
     from time import clock
-    I = np.average( imread('picameraSem1.jpg') , axis = 2 )
+    I = np.average( imread('sem.png') , axis = 2 )
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , .1 , 5.0 , 2.0, display = True)
+    b = fullAnalysis( I , 12. , 12. , 1.5, display = False)
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'
