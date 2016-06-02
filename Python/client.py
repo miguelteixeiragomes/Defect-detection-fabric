@@ -63,10 +63,15 @@ def onPermisisonResponse(data):
 
 if __name__ == "__main__":
     try:
-        # TODO: sys.argv
         # Establish the connection & initialize
-        # IP is set to Gil's mac
-        sio = SocketIOClient('192.168.1.88', 5000)
+        if (len(sys.argv) == 3):
+            server = sys.argv[1]
+            port = int(sys.argv[2])
+        else:
+            # TODO: Change to Gil's mac
+            server = "127.0.0.1"
+            port = 5000
+        sio = SocketIOClient(server, port)
         # Request for personal ID
         sio.emit("id_request")
         sio.on("register_id", on_registerID)

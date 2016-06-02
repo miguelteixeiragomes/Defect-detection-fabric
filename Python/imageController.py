@@ -21,7 +21,7 @@ def capturePicture():
     # # Close and return file's name
     # file.close()
     # return fileName
-    return "input.png"
+    return "test.jpg"
 
 """
 This function converts an image to it's
@@ -42,6 +42,6 @@ def killProcess():
     return True
 
 if __name__ == "__main__":
-    imgBase64Encode = convertToBase64("input.png")
+    imgBase64Encode = convertToBase64("test.png")
     im = Image.open(BytesIO(base64.decodestring(imgBase64Encode)))
     im.save("output.png", "PNG")

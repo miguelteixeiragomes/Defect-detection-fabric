@@ -35,7 +35,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     # This function handles the permission request
     def onPermissionRequest(self, msgContent):
-        print "New permission request. Server status: " + str(self.permissionStatus)
+        print "New permission request. Server permission status: " + str(self.permissionStatus)
         if self.permissionStatus == True:
             self.grantPermission()
         else:

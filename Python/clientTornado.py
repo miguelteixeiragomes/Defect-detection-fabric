@@ -10,7 +10,7 @@ class WSClient():
     # Connection init
     def __init__(self, server, port):
         websocket.enableTrace(False)
-        self.ws = websocket.WebSocketApp("ws://127.0.0.1:8888/ws",
+        self.ws = websocket.WebSocketApp("ws://" + server + ":" + port + "/ws",
             on_message = self.on_message,
             on_error = self.on_error,
             on_close = self.on_close)
@@ -53,7 +53,8 @@ class WSClient():
         message = json.dumps(message)
         self.ws.send(message)
 
-    # This function
+    # This function handles the response
+    # To a permission response
     def onPermissionResponse(self, msgContent):
         if msgContent == True:
             self.permissionGranted()
@@ -61,7 +62,8 @@ class WSClient():
             time.sleep(0.25)
             self.askForPermission()
 
-    # This function
+    # This function handles the case
+    # Where a permission to send an image is given
     def permissionGranted(self):
         # Take picture send base64 to Server
         fileName = imc.capturePicture()
@@ -76,20 +78,28 @@ class WSClient():
         message = json.dumps(message)
         self.ws.send(message)
 
-    # This function
+    # This function handles the
+    # Response to an image analysis
     def onAnalysisResultResponse(self, msgContent):
         timeStr = time.strftime("%Y%m%d-%H%M%S")
-        print "New Result: " + msgContent + " - "  + timeStr
+        print "New Result: " + str(msgContent) + " - " + timeStr
         if msgContent == True:
             self.onDefect()
         else:
             self.askForPermission()
 
-    # This function
+    # This function handles the case
+    # Where there is a defect on the textile
     def onDefect(self):
         print "Defect detected! Closing down system"
         self.ws.close()
 
 if __name__ == "__main__":
-    # TODO: sys.argv
-    client = WSClient("172.0.0.1", "8888")
+    if (len(sys.argv) == 3):
+        server = sys.argv[1]
+        port = sys.argv[2]
+    else:
+        # TODO: Change to Gil's mac
+        server = "127.0.0.1"
+        port = "8888"
+    client = WSClient(server, port)
