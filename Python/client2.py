@@ -4,6 +4,11 @@ import sys
 import asyncore
 
 def connect(server, port):
+
+    # Example in functional
+    def _on_cenas_func(cenas):
+        print cenas
+
     # Inform connection settings
     print("connecting to: %s:%d" %(server, port))
 
@@ -23,10 +28,20 @@ def connect(server, port):
 
     return ws
 
+# Def example
+def _on_cenas(ws, cenas):
+    print cenas
+
 if __name__ == "__main__":
     # Define server settings
-    server = "172.16.1.100"
-    port = 5000
+    if (len(sys.argv) == 3):
+        # Case user specified
+        server = sys.argv[1]
+        port = int(sys.argv[2])
+    else:
+        # Use default to connect to Gil's mac
+        server = "172.16.1.100"
+        port = 5000
 
     # Init connection
     ws = connect(server. port)
