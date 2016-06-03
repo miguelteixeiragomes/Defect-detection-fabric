@@ -16,6 +16,8 @@ class WSClient():
             on_close = self.on_close)
         self.ws.on_open = self.on_open
         self.ws.run_forever()
+        self.N = 4
+        self.counting = []
 
     # This function deals with connection opening
     def on_open(self, ws):
@@ -87,15 +89,36 @@ class WSClient():
     def onAnalysisResultResponse(self, msgContent):
         timeStr = time.strftime("%Y%m%d-%H%M%S")
         print "New Result: " + str(msgContent) + " - " + timeStr
-        if msgContent == True:
-            self.onDefect()
-        else:
+        print "Detection history: " + str(self.counting)
+        self.resultAnalysis(msgContent)
+
+    # This function analyses the result
+    # And saves compares with previous results
+    def resultAnalysis(self, result):
+        numberOfResults = len(self.counting)
+        if numberOfResults == 0:
+            self.counting.append(result)
             self.askForPermission()
+        else:
+            equalResults = 0
+            for value in self.counting:
+                if(value == result):
+                    equalResults += 1
+            if (equalResults == numberOfResults):
+                self.counting.append(result)
+                if(len(self.counting) == self.N):
+                    self.onDefect()
+                else:
+                    self.askForPermission()
+            else:
+                self.counting = []
+                self.askForPermission()
 
     # This function handles the case
     # Where there is a defect on the textile
     def onDefect(self):
-        print "Defect detected! Closing down system"
+        timeStr = time.strftime("%Y%m%d-%H%M%S")
+        print "Defect detected! - " + timeStr
         self.ws.close()
 
 if __name__ == "__main__":
