@@ -1,15 +1,5 @@
 import numpy as np
-
-
-def gaussianKernel(n):
-    n = n  if  (type(n) in [tuple, list, np.ndarray])  else  (n, n)
-    x = np.arange(n[0])
-    y = np.arange(n[1])
-    x, y = np.meshgrid(x, y, indexing = 'ij')
-    x0, y0 = .5*float(n[0] - 1) , .5*float(n[1] - 1)
-    sigX, sigY = float(n[0])/5. , float(n[1])/5.
-    ker = np.exp( - .5*(x - x0)**2/sigX**2  -  .5*(y - y0)**2/sigY**2 )
-    return np.float32( ker / np.sum(ker) )
+from gaussianStuff import gaussianKernel2D as gaussianKernel
 
 
 def gaussianSubSamplingPY(I, blurRadius, n):
@@ -33,5 +23,5 @@ if __name__ == '__main__':
     
     if test == 'subSampling':
         I = np.average( imread('linhas.png') , axis = 2 )
-        pl.imshow( gaussianSubSamplingPY(I , (15,1) , (1,1) ), cmap = 'Greys_r' )
+        pl.imshow( gaussianSubSamplingPY(I , (0.5,0.5) , (1,1) ), cmap = 'Greys_r' )
         pl.show()

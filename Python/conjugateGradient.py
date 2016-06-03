@@ -1,4 +1,5 @@
 import numpy as np
+from gaussianStuff import gaussianKernel3D
 
 
 def f(*x):

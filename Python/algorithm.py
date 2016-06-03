@@ -5,7 +5,7 @@ from localBinaryPattern    import directionalLBP
 from directionalSum        import directionalSum
 from minMax                import maxs
 from imageRotation         import rotate
-from gaussianFilter        import gaussianFilter
+from gaussianStuff         import gaussianFilter
 from directionalDerivative import directionalDerivative
 
 
