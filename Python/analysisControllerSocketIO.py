@@ -16,9 +16,9 @@ def createImage(sid, imgBase64):
     return fileName
 
 def analyseImage(fileName):
-    # return analyser(fileName) Commented until camera works
-    time.sleep(0.5)
-    return False
+    return analyser(fileName)
+    #time.sleep(0.5)
+    #return False
 
 def deleteImage(fileName):
     os.remove(fileName)

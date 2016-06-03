@@ -108,7 +108,7 @@ def fullAnalysis(I, blurRadius, blur1D, threshold, display = False):
 
 def analyser(filePath):
     img = np.float32( imread(filePath) )
-    return fullAnalysis( img , 15 , 5.0 , 2.0 , False) # parametros aleatorios
+    return fullAnalysis( img , 20. , 20. , 1.5 , False)
     
 
 if __name__ == '__main__':

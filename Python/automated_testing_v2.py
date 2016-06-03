@@ -12,7 +12,7 @@ breaker = '\\' if platform.system() == 'Windows' else '/'
 images_dir_com = 'com' + breaker
 images_dir_sem = 'sem' + breaker
 images_com = [images_dir_com + f for f in listdir(images_dir_com) if isfile(join(images_dir_com, f)) and ('.png' in f  or  '.jpg' in f)]
-images_sem = [images_dir_sem + f for f in listdir(images_dir_sem) if isfile(join(images_dir_sem, f)) and ('.png' in f  or  '.jpg' in f)]        
+images_sem = [images_dir_sem + f for f in listdir(images_dir_sem) if isfile(join(images_dir_sem, f)) and ('.png' in f  or  '.jpg' in f)]
 
 
 def Q_function(x):
@@ -27,15 +27,15 @@ def Q_function(x):
         img = np.average(np.float32(imread(images_sem[i])), axis = 2)
         if fullAnalysis(img, x[0], x[1], x[2]) == True:
             s -= 1
-    
+
     return float(s)
 
 
 if __name__ == '__main__':
-    test = ['function', 'parameterFinder'][1]
-    
+    test = ['function', 'parameterFinder'][0]
+
     if test == 'function':
-        print Q_function([20.26015335 , 20.11543199  , 1.5])
-        
+        print Q_function([20. , 20.  ,  1.5]) # options: [20.,20.,1.5] ->   ou  20. , 10. , 2.0
+
     if test == 'parameterFinder':
-        print conjGradMax(Q_function, [20. , 20. , 1.5])
+        print conjGradMax(Q_function, [20. , 10. , 2.0])
