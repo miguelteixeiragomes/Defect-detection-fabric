@@ -1,7 +1,7 @@
 import socketio
 import eventlet
 from flask import Flask
-import analysisController as anc
+import analysisControllerSocketIO as aController
 
 # Define Socket.IO server and application wrapper
 sio = socketio.Server()
@@ -24,12 +24,10 @@ def permission_request_handler(sid):
 
 @sio.on("image")
 def image_handler(sid, imgBase64):
-    print "Client: " + sid + " sent an image"
-    # Process the image here then emit permission to get another or stop process
-    fileName = anc.createImage(sid, imgBase64)
-    analysisResult = anc.analyseImage(fileName)
-    anc.deleteImage(fileName)
-    sio.emit("analysis_result", analysisResult, room = sid)
+    fileName = aController.createImage(imgBase64)
+    result = aController.analyseImage(fileName)
+    aController.deleteImage(fileName)
+    sio.emit("analysis_result", result, room = sid)
 
 @sio.on('disconnect')
 def disconnect(sid):
