@@ -17,8 +17,8 @@ def createImage(imgBase64):
 
 def analyseImage(fileName):
     return analyser(fileName)
-    #time.sleep(0.5)
-    #return False
+#    time.sleep(0.5)
+#    return False
 
 def deleteImage(fileName):
     os.remove(fileName)
