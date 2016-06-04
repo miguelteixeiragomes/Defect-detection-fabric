@@ -12,7 +12,7 @@ prg = cl.Program(ctx, open('kernelsCL' + breaker + 'gaussianSubSamplingKernel.cl
 
 def gaussianSubSamplingCL(I_h, blurRadius, n):
     gaussKer_h = gaussianKernel( ( 2*blurRadius[0] + 1 , 2*blurRadius[1] + 1 ) )
-    R_h = np.zeros( ( (I_h.shape[0] - 2*blurRadius[0])//n[0] , (I_h.shape[1] - 2*blurRadius[1])//n[1] ), np.float32)
+    R_h = np.zeros( ( (I_h.shape[0] - 2*gaussKer_h.shape[0])//n[0] , (I_h.shape[1] - 2*gaussKer_h.shape[1])//n[1] ), np.float32)
     
     gaussKer_d = cl.Buffer(ctx, mf.READ_ONLY  | mf.COPY_HOST_PTR, hostbuf = gaussKer_h)
     I_d        = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
