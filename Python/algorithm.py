@@ -83,25 +83,17 @@ def eightDirectionAnalysis(G, blur1D, threshold, display):
 
 def fullAnalysis(I, blurRadius, blur1D, threshold, display = False):
     G = gaussianSubSampling(I , blurRadius)
-    
-    #print 'angle:', 0.0
+
     if eightDirectionAnalysis(G, blur1D, threshold, display):
         return True
     
     R = rotate(G, 8.)
-    #print 'angle:', 22.5
     if eightDirectionAnalysis(R, blur1D, threshold, display):
         return True
         
     R = rotate(G, -8.)
-    #print 'angle:', 11.25
     if eightDirectionAnalysis(R, blur1D, threshold, display):
         return True
-
-#    R = rotate(G, 33.75)
-#    #print 'angle:', 33.75
-#    if eightDirectionAnalysis(R, blur1D, threshold, display):
-#        return True
     
     else:
         return False

@@ -41,11 +41,11 @@ def Q_function(x):
 
 if __name__ == '__main__':
     from time import clock
-    test = ['function', 'parameterFinder'][1]
+    test = ['function', 'parameterFinder'][0]
 
     if test == 'function':
         Ti = clock()
-        print Q_function([20. , 20.  ,  1.5]) # options: [20.,20.,1.5] ->   ou  20. , 10. , 2.0
+        print Q_function([20. , 30. , 3.0])
         print 'exec time:', clock() - Ti
 
     if test == 'parameterFinder':
