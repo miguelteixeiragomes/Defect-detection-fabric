@@ -20,7 +20,7 @@ def localBinaryPatternCL(I_h): # melhoramento de ~5x
     return R_h
 
 
-def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 0 ):
+def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
     if type(patternList) == str:
         if patternList == '0|1':
             patternList = [0b00011110, 0b00111100]
