@@ -41,7 +41,7 @@ def Q_function(x):
 
 if __name__ == '__main__':
     from time import clock
-    test = ['function', 'parameterFinder'][0]
+    test = ['function', 'parameterFinder'][1]
 
     if test == 'function':
         Ti = clock()
@@ -49,4 +49,4 @@ if __name__ == '__main__':
         print 'exec time:', clock() - Ti
 
     if test == 'parameterFinder':
-        print conjGradMax(Q_function, [20. , 20. , 1.5])
+        print conjGradMax(Q_function, [20. , 20. , 3.])

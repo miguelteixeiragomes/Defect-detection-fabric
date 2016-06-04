@@ -50,9 +50,9 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
     if len(L) > 1:
         M  = max(L)
         del(L[L.index(M)])
-#        return M > threshold*max(L)
+        #return M > threshold*max(L)
         
-        return M > (np.average(L) + 3.*np.std(L))
+        return M > (np.average(L) + threshold*np.std(L))
     
     return False
 
@@ -76,7 +76,7 @@ def eightDirectionAnalysis(G, blur1D, threshold, display):
 #    if singelImageAnalysis(G , directionalLBP , '0\\1' , '\\' , blur1D , threshold, display) and \
 #       singelImageAnalysis(G , directionalLBP , '1\\0' , '\\' , blur1D , threshold, display) and \
 #       singelImageAnalysis(G , directionalLBP , '\\' , '\\' , blur1D , threshold, display):
-        return True
+#        return True
     
     return False
 
