@@ -11,8 +11,8 @@ prg = cl.Program(ctx, open('kernelsCL' + breaker + 'lbpTransformKernel.cl', 'r')
 def localBinaryPatternCL(I_h): # melhoramento de ~5x
     R_h = np.zeros( (I.shape[0] - 2, I.shape[1] - 2) , np.uint8)
     
-    I_d        = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
-    R_d        = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
+    I_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
+    R_d = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
 
     prg.LBP(queue, R_h.shape, None, I_d, R_d).wait()
     
@@ -20,7 +20,7 @@ def localBinaryPatternCL(I_h): # melhoramento de ~5x
     return R_h
 
 
-def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 0 ):
+def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
     if type(patternList) == str:
         if patternList == '0|1':
             patternList = [0b00011110, 0b00111100]

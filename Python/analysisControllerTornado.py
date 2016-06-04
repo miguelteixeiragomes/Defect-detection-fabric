@@ -16,9 +16,19 @@ def createImage(imgBase64):
     return fileName
 
 def analyseImage(fileName):
-    # return analyser(fileName) Commented until camera works
+    # return analyser(fileName)
     time.sleep(0.5)
-    return False
+    return True
 
 def deleteImage(fileName):
     os.remove(fileName)
+    
+def convertToBase64(fileName):
+    imageBase64 = base64.encodestring(open(fileName,"rb").read())
+    return imageBase64
+
+
+if __name__ == '__main__':
+    imgBase64 = convertToBase64("test.jpg")
+    fileName = createImage(imgBase64)
+    print analyseImage(fileName)

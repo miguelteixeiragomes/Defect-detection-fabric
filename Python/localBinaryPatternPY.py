@@ -87,11 +87,11 @@ if __name__ == '__main__':
     from gaussianSubSampling import gaussianSubSampling
     import pylab as pl
     from scipy.ndimage import imread
-    test = ['LBP', 'DT'][1]
+    test = ['LBP', 'DT'][0]
     
     if test == 'LBP':
-        I = np.average( imread('com_3.png') , axis = 2 )
-        I = gaussianSubSampling(I, 15, 1)
+        I = np.average( imread('flavia.jpg') , axis = 2 )
+        I = gaussianSubSampling(I, 10, 1)
         Ti = clock()
         I = localBinaryPatternPY(I)
         print 'LBP time:', clock() - Ti

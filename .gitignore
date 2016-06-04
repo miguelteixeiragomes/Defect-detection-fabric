@@ -1,9 +1,13 @@
 # Files stated here are to be ignored by Git
 .idea/*
 Python/*.jpg
-Python/sem/*.jpg
-Python/sem/*.png
-Python/com/*.jpg
-Python/com/*.png
+Python/sem/*
+Python/com/*
+Python/fails/*
 Python/*.png
+<<<<<<< HEAD
 Python/*.pyc
+=======
+Python/*.pyc
+Python/*.p
+>>>>>>> 16d8f1a2ae6d94265647d3a756ce88d2f47a6c32

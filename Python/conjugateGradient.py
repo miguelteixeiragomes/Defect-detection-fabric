@@ -1,4 +1,5 @@
 import numpy as np
+from gaussianStuff import gaussianKernel3D
 
 
 def f(*x):
@@ -12,7 +13,7 @@ def norm(v):
     return np.sqrt(np.sum(np.array(v)**2))
 
 
-def conjGradMax(function, x0, dx = [.5, .5, .05], maxStep = .1, threshold = 1.):
+def conjGradMax(function, x0, dx = [.1, .1, .01], maxStep = .1, threshold = 1.):
     x = np.array(list(x0))
     lst = [np.array(list(x))]
     for i in range(9):

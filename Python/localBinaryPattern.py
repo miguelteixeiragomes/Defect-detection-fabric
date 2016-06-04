@@ -17,5 +17,5 @@ if __name__ == '__main__':
     from scipy.ndimage import imread
     import pylab as pl
     I = np.average( imread('com.png') , axis = 2 )
-    pl.imshow( directionalLBP( I , 15 ) , cmap = 'Greys_r' )
+    pl.imshow( directionalLBP( I , '|' , 0 ) , cmap = 'Greys_r' )
     pl.show()
