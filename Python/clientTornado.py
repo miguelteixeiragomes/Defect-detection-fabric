@@ -99,7 +99,7 @@ class WSClient():
             self.onDefect()
         else:
             # Destroy picture - Commented for now
-            imc.deleteImage(self.currentFileName)
+            # imc.deleteImage(self.currentFileName)
             self.askForPermission()
 
     # This function handles the case
@@ -107,7 +107,7 @@ class WSClient():
     def onDefect(self):
         timeStr = time.strftime("%Y%m%d-%H%M%S")
         print "Defect detected! - " + timeStr
-        print "Continuing Execution"
+        print "Continuing execution"
         self.askForPermission()
         # self.ws.close()
 
@@ -116,6 +116,6 @@ if __name__ == "__main__":
         server = sys.argv[1]
         port = sys.argv[2]
     else:
-        server = "172.16.1.100"
+        server = "127.0.0.1"
         port = "8888"
     client = WSClient(server, port)
