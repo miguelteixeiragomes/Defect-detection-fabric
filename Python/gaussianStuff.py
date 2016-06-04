@@ -12,10 +12,10 @@ def gaussianKernel1D(n):
 def gaussianKernel2D(n):
     n = n  if  (type(n) in [tuple, list, np.ndarray])  else  (n, n)
     n_int = int(n[0]) + 1 if n[0] % 1. != 0 else int(n[0]) , int(n[1]) + 1 if n[1] % 1. != 0 else int(n[1])
-    x = np.arange(n[0])
-    y = np.arange(n[1])
+    x = np.arange(n_int[0])
+    y = np.arange(n_int[1])
     x, y = np.meshgrid(x, y, indexing = 'ij')
-    x0, y0 = .5*float(n[0] - 1) , .5*float(n[1] - 1)
+    x0, y0 = .5*float(n_int[0] - 1) , .5*float(n_int[1] - 1)
     sigX, sigY = float(n[0])/5. , float(n[1])/5.
     ker = np.exp( - .5*(x - x0)**2/sigX**2  -  .5*(y - y0)**2/sigY**2 )
     return np.float32( ker / np.sum(ker) )

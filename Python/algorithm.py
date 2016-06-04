@@ -108,7 +108,7 @@ def fullAnalysis(I, blurRadius, blur1D, threshold, display = False):
 
 
 def analyser(filePath):
-    img = np.float32( imread(filePath) )
+    img = np.average( np.float32( imread(filePath) ) , axis = 2 ) 
     return fullAnalysis( img , 20. , 20. , 1.5 , False)
     
 
