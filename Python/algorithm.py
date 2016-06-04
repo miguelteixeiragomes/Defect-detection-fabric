@@ -10,7 +10,7 @@ from directionalDerivative import directionalDerivative
 from scipy.ndimage         import imread
 
 
-def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, threshold, display = False):
+def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, threshold, display = True):
     #print '\t', command1
     if display:
         pl.figure('cmd1: %s  ,  %s' % (command1, command2))
