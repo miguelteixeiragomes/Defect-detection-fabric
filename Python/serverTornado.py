@@ -78,9 +78,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.permissionStatus = True
             self.respondAfterAnalysis(result)
         except Exception as error:
+            aController.deleteImage(fileName)
             print "Error analysing image! Aborting"
             print error
-            self.respondAfterAnalysis(True)
             self.close()
 
     # This function responds to a client
