@@ -26,7 +26,7 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
             patternList = [0b00011110, 0b00111100]
         elif patternList == '1|0':
             patternList = [0b11100001, 0b11000011]
-            
+
         elif patternList == '0-1':
             patternList = [0b11110000, 0b01111000]
         elif patternList == '1-0':
@@ -41,7 +41,7 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
             patternList = [0b00001111, 0b00011110]
         elif patternList == '1\\0':
             patternList = [0b11110000, 0b11100001]
-        
+
         elif patternList == '|':
             patternList = [0b00011110, 0b00111100, 0b11100001, 0b11000011]
         elif patternList == '-':
@@ -50,10 +50,10 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
             patternList = [0b01111000, 0b00111100, 0b11000011, 0b10000111]
         elif patternList == '\\':
             patternList = [0b00001111, 0b00011110, 0b11110000, 0b11100001]
-        
+
         else:
             raise ValueError("Invalid text command: '" + str(patternList) + "'.")
-            
+
     nearMissList = []
     for i in range(len(patternList)):
         for j in range(8):
@@ -63,24 +63,29 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
                     nearMissList.append( elem )
     patternList_h  = np.uint8(np.array(patternList))
     nearMissList_h = np.uint8(np.array(nearMissList))
-    
+
     R_h = np.zeros( (I_h.shape[0] - 2, I_h.shape[1] - 2) , np.uint8)
-    
-    patternList_d  = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = patternList_h)    
-    nearMissList_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = nearMissList_h)   
+
+    patternList_d  = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = patternList_h)
+    nearMissList_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = nearMissList_h)
     I_d            = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
     R_d            = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
-    
+
     prg.LBP(queue, R_h.shape, None, I_d, R_d).wait()
     prg.directionalPatterns(queue, R_h.shape, None, R_d, patternList_d, np.uint16(len(patternList)), nearMissList_d, np.uint16(len(nearMissList))).wait()
     for i in range(neighborRange):
         prg.neighborCorrection(queue, R_h.shape, None, R_d).wait()
-    
-    prg.cleanUp(queue, np.array(R_h.shape) - 2, None, R_d).wait()
-    
-    cl.enqueue_copy(queue, R_h, R_d)
-    return R_h[1:-1,1:-1]
 
+    try:
+        prg.cleanUp(queue, np.array(R_h.shape) - 2, None, R_d).wait()
+        cl.enqueue_copy(queue, R_h, R_d)
+
+    except Exception as error:
+        print error
+        cl.enqueue_copy(queue, R_h, R_d)
+        R_h[ np.where(R_h == 127) ] = 0
+
+    return R_h[1:-1, 1:-1]
 
 
 if __name__ == '__main__': # 0.00483932963738
