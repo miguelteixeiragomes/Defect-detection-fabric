@@ -1,4 +1,4 @@
-import base64
+gimport base64
 import os
 import time
 from PIL import Image
