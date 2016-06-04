@@ -16,6 +16,7 @@ class WSClient():
             on_close = self.on_close)
         self.ws.on_open = self.on_open
         self.ws.run_forever()
+        self.currentFileName = ""
 
     # This function deals with connection opening
     def on_open(self, ws):
@@ -28,7 +29,7 @@ class WSClient():
         message = json.loads(message)
         msgType = message["msgType"]
         msgContent = message["msgContent"]
-        
+
         # Interpret message type
         if msgType == "permissionGrant":
             self.onPermissionResponse(msgContent)
@@ -69,8 +70,7 @@ class WSClient():
             # Take picture send base64 to Server
             fileName = imc.capturePicture()
             imageBase64 = imc.convertToBase64(fileName)
-            # Destroy picture - Commented for now
-            # imc.deleteImage(fileName)
+            self.currentFileName = fileName
             # Send to server
             message = {
                 "msgType": "image",
@@ -87,23 +87,35 @@ class WSClient():
     def onAnalysisResultResponse(self, msgContent):
         timeStr = time.strftime("%Y%m%d-%H%M%S")
         print "New Result: " + str(msgContent) + " - " + timeStr
+        print "Detection history: " + str(self.counting)
+        self.resultAnalysis(msgContent)
+
+    # This function handles the
+    # Response to an image analysis
+    def onAnalysisResultResponse(self, msgContent):
+        timeStr = time.strftime("%Y%m%d-%H%M%S")
+        print "New Result: " + str(msgContent) + " - " + timeStr
         if msgContent == True:
             self.onDefect()
         else:
+            # Destroy picture - Commented for now
+            imc.deleteImage(self.currentFileName)
             self.askForPermission()
 
     # This function handles the case
     # Where there is a defect on the textile
     def onDefect(self):
-        print "Defect detected! Closing down system"
-        self.ws.close()
+        timeStr = time.strftime("%Y%m%d-%H%M%S")
+        print "Defect detected! - " + timeStr
+        print "Continuing Execution"
+        self.askForPermission()
+        # self.ws.close()
 
 if __name__ == "__main__":
     if (len(sys.argv) == 3):
         server = sys.argv[1]
         port = sys.argv[2]
     else:
-        # TODO: Change to Gil's mac
-        server = "127.0.0.1"
+        server = "172.16.1.100"
         port = "8888"
     client = WSClient(server, port)
