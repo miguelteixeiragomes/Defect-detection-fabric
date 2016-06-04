@@ -1,5 +1,5 @@
 import pyopencl as cl
-1/0
+
 
 def get_ready_cl(platform_idx = None  ,  device_idx = None):
     if platform_idx == None:

@@ -26,15 +26,15 @@ def Q_function(x):
         #img = np.float32(images_com[i])
         if fullAnalysis(img, x[0], x[1], x[2]) == True:
             s += 1
-        else:
-            imsave('fails\\' + images_com[i][3:], img)
+#        else:
+#            imsave('fails\\' + images_com[i][3:], img)
 
     for i in range(len(images_sem)):
         img = np.average(np.float32(imread(images_sem[i])), axis = 2)
         #img = np.float32(images_sem[i])
-        if fullAnalysis(img, x[0], x[1], x[2]) == True:
-            s -= 1
-            imsave('fails\\' + images_sem[i][3:], img)
+        if fullAnalysis(img, x[0], x[1], x[2]) == False:
+            s += 1
+            #imsave('fails\\' + images_sem[i][3:], img)
 
     return float(s)
 
@@ -49,4 +49,4 @@ if __name__ == '__main__':
         print 'exec time:', clock() - Ti
 
     if test == 'parameterFinder':
-        print conjGradMax(Q_function, [20. , 10. , 2.0])
+        print conjGradMax(Q_function, [20. , 20. , 1.5])
