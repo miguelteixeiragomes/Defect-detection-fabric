@@ -4,6 +4,7 @@ import tornado.web
 import tornado.websocket
 import json
 import time
+import analysisControllerTornado as aController
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
@@ -11,6 +12,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     # Set default permission to True
     def initialize(self):
         self.permissionStatus = True
+        self.N = 4
+        self.counting = []
 
     # This function handles new user connection
     def open(self):
@@ -69,22 +72,43 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.permissionStatus = False
             timeStr = time.strftime("%Y%m%d-%H%M%S")
             print "New image: " + timeStr
-            # TODO: Substitute for new analyser code
-            time.sleep(0.5)
-            result = False
+            fileName = aController.createImage(msgContent)
+            result = aController.analyseImage(fileName)
+            aController.deleteImage(fileName)
             self.permissionStatus = True
             self.respondAfterAnalysis(result)
-        except:
+        except Exception as error:
+            aController.deleteImage(fileName)
             print "Error analysing image! Aborting"
-            self.respondAfterAnalysis(True)
+            print error
             self.close()
 
     # This function responds to a client
     # After an analysis
     def respondAfterAnalysis(self, result):
+        print "Current history: " + str(self.counting)
+        numberOfResults = len(self.counting)
+        finalResult = False
+        if numberOfResults == 0:
+            self.counting.append(result)
+        else:
+            equalResults = 0
+            for value in self.counting:
+                if(value == result):
+                    equalResults += 1
+            if (equalResults == numberOfResults):
+                self.counting.append(result)
+                if(len(self.counting) == self.N and result == True):
+                    finalResult = True
+                    self.counting = []
+                elif(len(self.counting)>self.N):
+                    del self.counting[0]
+            else:
+                self.counting = [result]
+
         message = {
             "msgType": "analysisResult",
-            "msgContent": result
+            "msgContent": finalResult
         }
         message = json.dumps(message)
         self.write_message(message)
