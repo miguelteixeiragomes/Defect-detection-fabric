@@ -3,6 +3,7 @@
 Python/*.jpg
 Python/sem/*
 Python/com/*
+Python/fails/*
 Python/*.png
 Python/*.pyc
 Python/*.p

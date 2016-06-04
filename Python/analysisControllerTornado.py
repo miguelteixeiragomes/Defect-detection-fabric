@@ -22,3 +22,11 @@ def analyseImage(fileName):
 
 def deleteImage(fileName):
     os.remove(fileName)
+    
+def convertToBase64(fileName):
+    imageBase64 = base64.encodestring(open(fileName,"rb").read())
+    return imageBase64
+
+imgBase64 = convertToBase64("test.jpg")
+fileName = createImage(imgBase64)
+print analyseImage(fileName)

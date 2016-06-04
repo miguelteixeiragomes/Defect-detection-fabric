@@ -7,6 +7,7 @@ from minMax                import maxs
 from imageRotation         import rotate
 from gaussianStuff         import gaussianFilter
 from directionalDerivative import directionalDerivative
+from scipy.ndimage         import imread
 
 
 def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, threshold, display = False):
@@ -87,12 +88,12 @@ def fullAnalysis(I, blurRadius, blur1D, threshold, display = False):
     if eightDirectionAnalysis(G, blur1D, threshold, display):
         return True
     
-    R = rotate(G, 15.)
+    R = rotate(G, 8.)
     #print 'angle:', 22.5
     if eightDirectionAnalysis(R, blur1D, threshold, display):
         return True
         
-    R = rotate(G, -15.)
+    R = rotate(G, -8.)
     #print 'angle:', 11.25
     if eightDirectionAnalysis(R, blur1D, threshold, display):
         return True
@@ -112,12 +113,12 @@ def analyser(filePath):
     
 
 if __name__ == '__main__':
-    from scipy.ndimage import imread
     from time import clock
     I = np.average( imread('com\\c6.jpg') , axis = 2 )
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    b = fullAnalysis( I , 20. , 20. , 1.5, display = 1)
+    #b = fullAnalysis( I , 20. , 20. , 1.5, display = 1)
+    b = analyser( 'test.jpg' )
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'

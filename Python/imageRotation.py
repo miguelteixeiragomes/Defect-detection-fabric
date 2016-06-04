@@ -16,11 +16,11 @@ def rotate(I, angle):
 if __name__ == '__main__':
     import pylab as pl
     from scipy.ndimage import imread
-    I = imread('dados.png')
+    I = imread('com\\wwwwcccc32.jpg')
     I = np.average(I, axis = 2)
     
     from time import clock
-    angle = 45.
+    angle = -5.
     pl.subplot(121)
     pl.imshow(I, cmap = 'Greys_r')
     pl.axis('off')
