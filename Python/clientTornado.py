@@ -11,9 +11,9 @@ class WSClient():
     def __init__(self, server, port):
         websocket.enableTrace(False)
         self.ws = websocket.WebSocketApp("ws://" + server + ":" + port + "/ws",
-            on_message = self.on_message,
-            on_error = self.on_error,
-            on_close = self.on_close)
+                                         on_message = self.on_message,
+                                         on_error = self.on_error,
+                                         on_close = self.on_close)
         self.ws.on_open = self.on_open
         self.ws.run_forever()
         self.currentFileName = ""
@@ -88,38 +88,29 @@ class WSClient():
     def onAnalysisResultResponse(self, msgContent):
         timeStr = time.strftime("%Y%m%d-%H%M%S")
         print "New Result: " + str(msgContent) + " - " + timeStr
-        print "Detection history: " + str(self.counting)
-        self.resultAnalysis(msgContent)
-
-    # This function handles the
-    # Response to an image analysis
-    def onAnalysisResultResponse(self, msgContent):
-        timeStr = time.strftime("%Y%m%d-%H%M%S")
-        print "New Result: " + str(msgContent) + " - " + timeStr
+        # Destroy picture - Commented for now
+        imc.deleteImage(self.currentFileName)
         if msgContent == True:
             self.onDefect()
-            imc.deleteImage(self.currentFileName)
         else:
-            # Destroy picture - Commented for now
-            imc.deleteImage(self.currentFileName)
             self.askForPermission()
 
     # This function handles the case
     # Where there is a defect on the textile
     def onDefect(self):
-        print "Defect detected! - Contuing execution" 
+        print "Defect detected! - Contuing execution"
         self.askForPermission()
         # self.ws.close()
 
 if __name__ == "__main__":
     try:
-	if (len(sys.argv) == 3):
-       	 	server = sys.argv[1]
-        	port = sys.argv[2]
-    	else:
-        	server = "172.16.1.200"
-        	port = "8888"
-    		client = WSClient(server, port)
+        if (len(sys.argv) == 3):
+            server = sys.argv[1]
+            port = sys.argv[2]
+        else:
+            server = "172.16.1.200"
+            port = "8888"
+            client = WSClient(server, port)
     except:
         print "Shutting down LEDs"
-	imc.killProcess()	
+        imc.killProcess()
