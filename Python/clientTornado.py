@@ -108,7 +108,7 @@ if __name__ == "__main__":
             server = sys.argv[1]
             port = sys.argv[2]
         else:
-            server = "172.16.1.200"
+            server = "172.16.1.100"
             port = "8888"
             client = WSClient(server, port)
     except:
