@@ -20,16 +20,14 @@ Returns the file's name
 def capturePicture():
     # Prepare file name with current timestamp
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    # fileName = "i-" + timestr + ".jpg"
-    fileName = "i.jpg"
+    fileName = "i-" + timestr + ".jpg"
     # Capture image with the Pi Camera
     with picamera.PiCamera() as camera:
-        camera.resolution = (1024, 768)
+        camera.resolution = (800, 450)
         camera.start_preview()
         camera.capture(fileName)
     # Return file's name
     return fileName
-    # return "test.jpg"
 
 """
 This function converts an image to it's

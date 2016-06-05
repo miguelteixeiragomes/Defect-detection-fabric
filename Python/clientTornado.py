@@ -1,6 +1,6 @@
 import imageController as imc
 import websocket
-import json
+import ujson as json
 import time
 import sys
 
@@ -70,7 +70,6 @@ class WSClient():
             # Take picture send base64 to Server
             fileName = imc.capturePicture()
             imageBase64 = imc.convertToBase64(fileName)
-	    print "Got image source"
             self.currentFileName = fileName
             # Send to server
             message = {
@@ -99,17 +98,16 @@ class WSClient():
         print "New Result: " + str(msgContent) + " - " + timeStr
         if msgContent == True:
             self.onDefect()
+            imc.deleteImage(self.currentFileName)
         else:
             # Destroy picture - Commented for now
-            # imc.deleteImage(self.currentFileName)
+            imc.deleteImage(self.currentFileName)
             self.askForPermission()
 
     # This function handles the case
     # Where there is a defect on the textile
     def onDefect(self):
-        timeStr = time.strftime("%Y%m%d-%H%M%S")
-        print "Defect detected! - " + timeStr
-        print "Continuing Execution"
+        print "Defect detected! - Contuing execution" 
         self.askForPermission()
         # self.ws.close()
 
