@@ -74,5 +74,9 @@ __kernel void neighborCorrection(__global unsigned char* R)
 
 __kernel void cleanUp(__global unsigned char* R)
 {
-    R[ravel_idx(i, j, Ly)] = 255*( R[ravel_idx(i, j, Ly)]/255 );
+    if (R[ravel_idx(i, j, Ly)] == 127)
+    {
+        R[ravel_idx(i, j, Ly)] == 0;
+    }
+    //R[ravel_idx(i, j, Ly)] = 255*( R[ravel_idx(i, j, Ly)]/255 );
 }

@@ -29,5 +29,6 @@ if __name__ == '__main__':
     from scipy.ndimage import imread
     import pylab as pl
     I = np.float32(np.average( imread('com.png') , axis = 2 ))
-    pl.imshow( gaussianSubSamplingCL(I , (15,1) , (1,1) ) , cmap = 'Greys_r' )
-    pl.show()
+    G = gaussianSubSamplingCL(I, (15., 15.), (1., 1.))
+    #pl.imshow( G , cmap = 'Greys_r' )
+    #pl.show()
