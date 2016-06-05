@@ -86,25 +86,27 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     # This function responds to a client
     # After an analysis
     def respondAfterAnalysis(self, result):
-        print "Current history: " + str(self.counting)
-        numberOfResults = len(self.counting)
-        finalResult = False
-        if numberOfResults == 0:
-            self.counting.append(result)
-        else:
-            equalResults = 0
-            for value in self.counting:
-                if(value == result):
-                    equalResults += 1
-            if (equalResults == numberOfResults):
-                self.counting.append(result)
-                if(len(self.counting) == self.N and result == True):
-                    finalResult = True
-                    self.counting = []
-                elif(len(self.counting)>self.N):
-                    del self.counting[0]
-            else:
-                self.counting = [result]
+        # print "Current history: " + str(self.counting)
+        # numberOfResults = len(self.counting)
+        # finalResult = False
+        # if numberOfResults == 0:
+        #     self.counting.append(result)
+        # else:
+        #     equalResults = 0
+        #     for value in self.counting:
+        #         if(value == result):
+        #             equalResults += 1
+        #     if (equalResults == numberOfResults):
+        #         self.counting.append(result)
+        #         if(len(self.counting) == self.N and result == True):
+        #             finalResult = True
+        #             self.counting = []
+        #         elif(len(self.counting)>self.N):
+        #             del self.counting[0]
+        #     else:
+        #         self.counting = [result]
+        finalResult = result
+        print finalResult
 
         message = {
             "msgType": "analysisResult",
