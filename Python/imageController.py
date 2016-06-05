@@ -7,7 +7,7 @@ from io import BytesIO
 import RPi.GPIO as GPIO
 import io
 
-# Init LEDs
+# Init LEDs and camera
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(40, GPIO.OUT)
 GPIO.output(40, True)
@@ -23,13 +23,11 @@ def capturePicture():
     # fileName = "i-" + timestr + ".jpg"
     fileName = "i.jpg"
     # Capture image with the Pi Camera
-    # file = open(fileName, 'wb')
     with picamera.PiCamera() as camera:
+        camera.resolution = (1024, 768)
         camera.start_preview()
-        time.sleep(1.)
         camera.capture(fileName)
-    # Close and return file's name
-    # file.close()
+    # Return file's name
     return fileName
     # return "test.jpg"
 

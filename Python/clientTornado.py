@@ -70,6 +70,7 @@ class WSClient():
             # Take picture send base64 to Server
             fileName = imc.capturePicture()
             imageBase64 = imc.convertToBase64(fileName)
+	    print "Got image source"
             self.currentFileName = fileName
             # Send to server
             message = {
@@ -78,6 +79,7 @@ class WSClient():
             }
             message = json.dumps(message)
             self.ws.send(message)
+            print "Sent image source"
         except Exception as error:
             print "Failed to capture image or transfer to server: " + str(error)
             self.ws.close()
@@ -121,4 +123,5 @@ if __name__ == "__main__":
         	port = "8888"
     		client = WSClient(server, port)
     except:
+        print "Shutting down LEDs"
 	imc.killProcess()	
