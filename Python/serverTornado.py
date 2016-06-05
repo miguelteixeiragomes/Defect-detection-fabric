@@ -2,7 +2,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-import json
+import ujson as json
 import time
 import analysisControllerTornado as aController
 
@@ -74,11 +74,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             print "New image: " + timeStr
             fileName = aController.createImage(msgContent)
             result = aController.analyseImage(fileName)
-            aController.deleteImage(fileName)
+            # aController.deleteImage(fileName)
             self.permissionStatus = True
             self.respondAfterAnalysis(result)
         except Exception as error:
-            aController.deleteImage(fileName)
+            # aController.deleteImage(fileName)
             print "Error analysing image! Aborting"
             print error
             self.close()

@@ -1,6 +1,6 @@
 import imageController as imc
 import websocket
-import json
+import ujson as json
 import time
 import sys
 
