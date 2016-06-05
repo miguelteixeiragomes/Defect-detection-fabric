@@ -69,7 +69,8 @@ def directionalLBP_CL(I_h, patternList = '0|1' , neighborRange = 20 ):
     patternList_d  = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = patternList_h)    
     nearMissList_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = nearMissList_h)   
     I_d            = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = I_h)
-    R_d            = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
+    #R_d            = cl.Buffer(ctx, mf.READ_WRITE , size = R_h.shape[0]*R_h.shape[1])
+    R_d = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf = R_h)
     
     prg.LBP(queue, R_h.shape, None, I_d, R_d).wait()
     prg.directionalPatterns(queue, R_h.shape, None, R_d, patternList_d, np.uint16(len(patternList)), nearMissList_d, np.uint16(len(nearMissList))).wait()
