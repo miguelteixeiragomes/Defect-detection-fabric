@@ -2,3 +2,4 @@
 .idea/*
 Python/*.pyc
 Python/*.jpg
+Python/*.save

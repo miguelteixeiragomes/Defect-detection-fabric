@@ -99,7 +99,7 @@ class WSClient():
             self.onDefect()
         else:
             # Destroy picture - Commented for now
-            imc.deleteImage(self.currentFileName)
+            # imc.deleteImage(self.currentFileName)
             self.askForPermission()
 
     # This function handles the case
@@ -112,10 +112,13 @@ class WSClient():
         # self.ws.close()
 
 if __name__ == "__main__":
-    if (len(sys.argv) == 3):
-        server = sys.argv[1]
-        port = sys.argv[2]
-    else:
-        server = "172.16.1.100"
-        port = "8888"
-    client = WSClient(server, port)
+    try:
+	if (len(sys.argv) == 3):
+       	 	server = sys.argv[1]
+        	port = sys.argv[2]
+    	else:
+        	server = "172.16.1.200"
+        	port = "8888"
+    		client = WSClient(server, port)
+    except:
+	imc.killProcess()	
