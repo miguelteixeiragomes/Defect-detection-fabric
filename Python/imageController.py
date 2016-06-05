@@ -23,13 +23,13 @@ def capturePicture():
     # fileName = "i-" + timestr + ".jpg"
     fileName = "i.jpg"
     # Capture image with the Pi Camera
-    file = open(fileName, 'wb')
+    # file = open(fileName, 'wb')
     with picamera.PiCamera() as camera:
-    	camera.start_preview()
-	time.sleep(1.)
-	camera.capture(file)
+        camera.start_preview()
+        time.sleep(1.)
+        camera.capture(fileName)
     # Close and return file's name
-    file.close()
+    # file.close()
     return fileName
     # return "test.jpg"
 
