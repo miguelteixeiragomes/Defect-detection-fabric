@@ -58,9 +58,9 @@ def singelImageAnalysis(G, directionalAnalyser, command1, command2, blur1D, thre
 
 
 def eightDirectionAnalysis(G, blur1D, threshold, display):
-    if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display) and \
-       singelImageAnalysis(G , directionalDerivative , '|' , '|' , blur1D , threshold, display):
+#    if singelImageAnalysis(G , directionalLBP , '0|1' , '|' , blur1D , threshold, display) and \
+#       singelImageAnalysis(G , directionalLBP , '1|0' , '|' , blur1D , threshold, display) or \
+    if   singelImageAnalysis(G , directionalDerivative , '|' , '|' , blur1D , threshold, display):
         return True
         
 #    if singelImageAnalysis(G , directionalLBP , '0-1' , '-' , blur1D , threshold, display) and \
@@ -101,16 +101,16 @@ def fullAnalysis(I, blurRadius, blur1D, threshold, display = False):
 
 def analyser(filePath):
     img = np.average( np.float32( imread(filePath) ) , axis = 2 ) 
-    return fullAnalysis( img, 20., 30., 4.0, False)
+    return fullAnalysis( img, 25. , 15. , 30.0, False)
     
 
 if __name__ == '__main__':
     from time import clock
-    #I = np.average( imread('com\\c6.jpg') , axis = 2 )
+    I = np.average( imread('Poly_com\\s5.jpg') , axis = 2 )
     #I = rotate(I, 90) # metam um angulo aleatorio que o meu super algoritmo nao quer saber!
     
     Ti = clock()
-    #b = fullAnalysis( I , 20. , 20. , 1.5, display = 1)
-    b = analyser( 'com.png' )
+    b = fullAnalysis( I , 25. , 20. , 3.0, display = 1)
+    #b = analyser( 'Poly_com\\s5.jpg' )
     print '\ndefect:', b
     #print 'detected in:', round(clock() - Ti, 2), 's'
